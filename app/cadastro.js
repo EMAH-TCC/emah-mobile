@@ -148,7 +148,7 @@ export default function Cadastro() {
     }
 
     if (role === 'idoso') {
-      router.push('/telaInicialIdoso'); //nomes provisorios enquanto as telas não foram criadas
+      router.push('/adicionarCuidador'); //nomes provisorios enquanto as telas não foram criadas
     } else {
       router.push('/telaInicialCuidador');
     }

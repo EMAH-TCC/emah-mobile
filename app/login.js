@@ -1,14 +1,44 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function Login() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
+  //estados para login e controle dos erros
+  const [loginInput, setLoginInput] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({ login: false, password: false });
+
+  // funçao para validar os campos
+  function validateLogin() {
+    const newErrors = {
+      login: !loginInput.trim(),
+      password: !password.trim(),
+    };
+    setErrors(newErrors);
+
+    if (newErrors.login || newErrors.password) {
+      Alert.alert('Atenção', 'Preencha todos os campos.');
+      return false;
+    }
+    return true;
+  }
+
   function handleLogin() {
-    router.push('/telaInicial');
+    if (!validateLogin()) return;
+
+    //logica para checar username/email/telefone futuramente
+    const isUserValid = true; //simulaçao
+
+    if (!isUserValid) {
+      Alert.alert('Erro', 'Usuário ou senha inválidos.');
+      return;
+    }
+
+    router.push('/menuInicial');
   }
 
   return (
@@ -23,17 +53,21 @@ export default function Login() {
         {/* Campos de entrada */}
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder="Usuário"
-            placeholderTextColor="#321904"
+            placeholder="Usuário, Email ou Telefone"
+            placeholderTextColor={errors.login ? 'red' : '#321904'}
             style={styles.input}
+            value={loginInput}
+            onChangeText={setLoginInput}
           />
 
           <View style={styles.passwordContainer}>
             <TextInput
               placeholder="Senha"
-              placeholderTextColor="#321904"
+              placeholderTextColor={errors.password ? 'red' : '#321904'}
               secureTextEntry={!showPassword}
               style={[styles.input, { flex: 1, marginBottom: 0 }]}
+              value={password}
+              onChangeText={setPassword}
             />
             <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
               <Ionicons
@@ -62,7 +96,7 @@ export default function Login() {
   );
 }
 
-//Estilos
+// Estilos
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
