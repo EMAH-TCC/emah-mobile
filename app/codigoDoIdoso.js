@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     maxWidth: 300,
   },
   primaryButton: {
-    backgroundColor: '#F28B0C',
+    backgroundColor: '#FBB65A',
   },
   buttonText: {
     color: '#321904',

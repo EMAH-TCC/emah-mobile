@@ -13,7 +13,7 @@ export default function MenuInicial() {
         <View style={styles.header}>
           <Text style={styles.greetingText}>Olá</Text>
           <TouchableOpacity onPress={() => router.push('/perfil')}>
-            <Ionicons name="person-outline" size={28} color="#000" />
+            <Ionicons name="person-outline" size={28} color="#321904" />
           </TouchableOpacity>
         </View>
 
@@ -24,22 +24,22 @@ export default function MenuInicial() {
         <View style={styles.bottomBox}>
           <View style={styles.grid}>
             <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/formulario')}>
-              <Ionicons name="clipboard-outline" size={38} color="#000" />
+              <Ionicons name="clipboard-outline" size={38} color="#321904" />
               <Text style={styles.menuText}>Formulário</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/remedios')}>
-              <Ionicons name="medkit-outline" size={38} color="#000" />
+              <Ionicons name="medkit-outline" size={38} color="#321904" />
               <Text style={styles.menuText}>Remédios</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/relatorio')}>
-              <Ionicons name="heart-outline" size={38} color="#000" />
+              <Ionicons name="heart-outline" size={38} color="#321904" />
               <Text style={styles.menuText}>Relatório</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/agenda')}>
-              <Ionicons name="calendar-outline" size={38} color="#000" />
+              <Ionicons name="calendar-outline" size={38} color="#321904" />
               <Text style={styles.menuText}>Agenda</Text>
             </TouchableOpacity>
           </View>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   greetingText: {
     fontSize: 18,
-    color: '#000',
+    color: '#321904',
     fontWeight: 'bold',
   },
 
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 3,
-    shadowColor: '#000',
+    shadowColor: '#321904',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   menuText: {
     marginTop: 8,
     fontSize: 18,
-    color: '#000',
+    color: '#321904',
     fontWeight: '500',
   },
 });
