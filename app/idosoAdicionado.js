@@ -1,25 +1,33 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function ErroAdicionarCuidador({ route }) {
+export default function IdosoAdicionado({ route }) {
   const router = useRouter();
 
-  const { nomeCuidador = 'Fulano' } = route?.params || {};
+  //devera recebe os dados do cuidador (nome e foto)
+  const { nomeIdoso = 'Fulano', fotoIdoso = null } = route?.params || {};
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
 
-        {/* Ícone triste */}
+        {/* Foto do perfil */}
         <View style={styles.header}>
-          <Ionicons name="sad-outline" size={80} color="#321904" />
+          {fotoIdoso ? (
+            <Image source={{ uri: fotoIdoso }} style={styles.profileImage} />
+          ) : (
+            <View style={styles.profileImage}>
+              <Ionicons name="person-outline" size={40} color="#F28B0C" />
+            </View>
+          )}
+          <Text style={styles.imageLabel}>Foto de perfil do idoso</Text>
         </View>
 
-        {/* Texto */}
+        {/* Texto do meio */}
         <View style={styles.content}>
           <Text style={styles.infoText}>
-            Não foi possível adicionar {nomeCuidador} como cuidador
+            Você foi adicionado como cuidador de {nomeIdoso}
           </Text>
         </View>
 
@@ -34,9 +42,9 @@ export default function ErroAdicionarCuidador({ route }) {
 
           <TouchableOpacity
             style={[styles.button, styles.secondaryButton]}
-            onPress={() => router.push('/codigoDoIdoso')}
+            onPress={() => router.push('/inserirCodigoIdoso')}
           >
-            <Text style={styles.buttonText}>Tentar novamente</Text>
+            <Text style={styles.buttonText}>Adicionar mais um idoso</Text>
           </TouchableOpacity>
         </View>
 
@@ -59,8 +67,21 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginTop: 80,
+    marginTop: 40,
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#EDE7F6',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 20,
+  },
+  imageLabel: {
+    color: '#321904',
+    fontSize: 14,
+    marginTop: 4,
   },
   content: {
     justifyContent: 'center',
@@ -72,7 +93,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     fontWeight: 'bold',
-    maxWidth: 320,
+    maxWidth: 300,
   },
   footer: {
     alignItems: 'center',
