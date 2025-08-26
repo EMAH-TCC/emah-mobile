@@ -16,12 +16,11 @@ export default function Cadastro() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
+  const [sobrenome, setSobrenome] = useState('');
   const [email, setEmail] = useState('');
   const [errorFields, setErrorFields] = useState([]);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
   const [shortPassword, setShortPassword] = useState(false);
-  const [usernameInUse, setUsernameInUse] = useState(false); //simulacao ate integrar com o back
   const [invalidEmail, setInvalidEmail] = useState(false);
 
   function chooseImageSource() {
@@ -107,7 +106,7 @@ export default function Cadastro() {
   function handleRegister() {
     const emptyFields = [];
     if (!name.trim()) emptyFields.push('name');
-    if (!username.trim()) emptyFields.push('username');
+    if (!sobrenome.trim()) emptyFields.push('sobrenome');
     if (!email.trim()) emptyFields.push('email');
     if (!birthDate.trim()) emptyFields.push('birthDate');
     if (!phone.trim()) emptyFields.push('phone');
@@ -141,11 +140,6 @@ export default function Cadastro() {
     }
 
     setPasswordMismatch(false);
-
-    // integrar a logica para verificar se o usuario ja existe
-    if (usernameInUse) {
-      return;
-    }
 
     if (role === 'idoso') {
       router.push('/adicionarCuidador'); //nomes provisorios enquanto as telas não foram criadas
@@ -183,7 +177,7 @@ export default function Cadastro() {
 
             <View style={styles.inputContainer}>
               <TextInput
-                placeholder="Nome completo"
+                placeholder="Nome"
                 placeholderTextColor={errorFields.includes('name') ? 'red' : '#321904'}
                 style={styles.input}
                 value={name}
@@ -191,17 +185,12 @@ export default function Cadastro() {
               />
 
               <TextInput
-                placeholder="Usuário"
-                placeholderTextColor={errorFields.includes('username') ? 'red' : '#321904'}
+                placeholder="Sobrenome"
+                placeholderTextColor={errorFields.includes('sobrenome') ? 'red' : '#321904'}
                 style={styles.input}
-                value={username}
-                onChangeText={setUsername}
+                value={sobrenome}
+                onChangeText={setSobrenome}
               />
-              {usernameInUse && (
-                <Text style={{ color: 'red', fontSize: 12, marginBottom: 10 }}>
-                  Este nome de usuário já está em uso.
-                </Text>
-              )}
 
               <TextInput
                 placeholder="E-mail"
