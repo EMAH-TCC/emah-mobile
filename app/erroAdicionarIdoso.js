@@ -2,10 +2,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function ErroAdicionarCuidador({ route }) {
+export default function ErroAdicionarIdoso({ route }) {
   const router = useRouter();
 
-  const { nomeCuidador = 'Fulano' } = route?.params || {};
+  const { nomeIdoso = 'Fulano' } = route?.params || {};
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -19,7 +19,7 @@ export default function ErroAdicionarCuidador({ route }) {
         {/* Texto */}
         <View style={styles.content}>
           <Text style={styles.infoText}>
-            Não foi possível adicionar {nomeCuidador} como cuidador
+            Não foi possível te adicionar como cuidador de {nomeIdoso}
           </Text>
         </View>
 
@@ -34,7 +34,7 @@ export default function ErroAdicionarCuidador({ route }) {
 
           <TouchableOpacity
             style={[styles.button, styles.secondaryButton]}
-            onPress={() => router.push('/codigoDoIdoso')}
+            onPress={() => router.push('/inserirCodigoIdoso')}
           >
             <Text style={styles.buttonText}>Tentar novamente</Text>
           </TouchableOpacity>

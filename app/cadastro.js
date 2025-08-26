@@ -144,7 +144,7 @@ export default function Cadastro() {
     if (role === 'idoso') {
       router.push('/adicionarCuidador'); //nomes provisorios enquanto as telas não foram criadas
     } else {
-      router.push('/telaInicialCuidador');
+      router.push('/inserirCodigoIdoso');
     }
   }
 
