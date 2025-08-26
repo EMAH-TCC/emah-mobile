@@ -53,7 +53,7 @@ export default function Login() {
         {/* Campos de entrada */}
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder="Usuário, Email ou Telefone"
+            placeholder="Email ou Telefone"
             placeholderTextColor={errors.login ? 'red' : '#321904'}
             style={styles.input}
             value={loginInput}
