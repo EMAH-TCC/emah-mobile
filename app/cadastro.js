@@ -2,10 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, AppState } from 'react-native';
-import {supabase} from '../utils/supabase';
-supabase.auth
-
+import { Alert, AppState, Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { supabase } from '../utils/supabase';
 
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
@@ -33,6 +31,49 @@ export default function Cadastro() {
   const [passwordMismatch, setPasswordMismatch] = useState(false);
   const [shortPassword, setShortPassword] = useState(false);
   const [invalidEmail, setInvalidEmail] = useState(false);
+  const [loading, setLoading] = useState(false)
+
+  async function signUpEmail() {
+    setLoading(true)
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signUp({
+      email,
+      password,
+    })
+    if (error) {
+      Alert.alert(error.message)
+      setLoading(false)
+      return;
+    }
+    const [day, month, year] = birthDate.split("/");
+    const dataDeNascimentoFormatada = `${year}-${month}-${day}`;
+    const telefoneLimpo = phone.replace(/\D/g, "");
+
+    if (user) {
+      const { error: insertError } = await supabase.from("paciente").insert([
+        {
+          nome: name,
+          sobrenome: sobrenome,
+          telefone: telefoneLimpo,
+          email: email,
+          data_de_nascimento: dataDeNascimentoFormatada,
+          id_user: user.id,
+        },
+      ]);
+
+      if (insertError) {
+        console.log("Erro ao inserir no banco:", insertError);
+        Alert.alert("Erro ao cadastrar usuário no banco.");
+      }
+    }
+
+    console.log("SignUp result:", { user, error });
+    console.log("Cadastro realizado! Verifique seu e-mail. :)");
+    Alert.alert("Cadastro realizado! Verifique seu e-mail. :)")
+    setLoading(false);
+  }
 
   function chooseImageSource() {
     Alert.alert(
@@ -93,7 +134,7 @@ export default function Cadastro() {
   }
 
   function handlePhoneChange(text) {
-    let cleaned = text.replace(/\D/g, '');
+    let cleaned = text.replace(/\D/g, "");
     if (cleaned.length <= 2) {
       setPhone(cleaned);
       return;
@@ -157,6 +198,8 @@ export default function Cadastro() {
     } else {
       router.push('/inserirCodigoIdoso');
     }
+
+    signUpEmail();
   }
 
   return (
@@ -290,7 +333,6 @@ export default function Cadastro() {
                 </TouchableOpacity>
               </View>
             </View>
-
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={[styles.button, styles.primaryButton]} onPress={handleRegister}>
                 <Text style={styles.buttonText}>Cadastrar</Text>
