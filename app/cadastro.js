@@ -50,9 +50,14 @@ export default function Cadastro() {
     const [day, month, year] = birthDate.split("/");
     const dataDeNascimentoFormatada = `${year}-${month}-${day}`;
     const telefoneLimpo = phone.replace(/\D/g, "");
-
+    let nomeTabela = null;
+    if (role === 'idoso') {
+      nomeTabela = "paciente";
+    } else {
+      nomeTabela = "cuidador";
+    }
     if (user) {
-      const { error: insertError } = await supabase.from("paciente").insert([
+      const { error: insertError } = await supabase.from(nomeTabela).insert([
         {
           nome: name,
           sobrenome: sobrenome,
@@ -71,7 +76,7 @@ export default function Cadastro() {
 
     console.log("SignUp result:", { user, error });
     console.log("Cadastro realizado! Verifique seu e-mail. :)");
-    Alert.alert("Cadastro realizado! Verifique seu e-mail. :)")
+    Alert.alert("Cadastro realizado!")
     setLoading(false);
   }
 
