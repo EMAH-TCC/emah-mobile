@@ -1,7 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, AppState, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { supabase } from '../utils/supabase';
+
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') {
+    supabase.auth.startAutoRefresh()
+  } else {
+    supabase.auth.stopAutoRefresh()
+  }
+})
 
 export default function Login() {
   const router = useRouter();
@@ -11,6 +20,22 @@ export default function Login() {
   const [loginInput, setLoginInput] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ login: false, password: false });
+  const [loading, setLoading] = useState(false);
+
+
+  async function signInWithEmail() {
+    if (!validateLogin()) return;
+    setLoading(true)
+    const { error } = await supabase.auth.signInWithPassword({
+      email: loginInput,
+      password: password,
+    })
+    if (error) {
+      Alert.alert(error.message)
+    } else {
+      router.push('/menuInicial');
+    }
+  }
 
   // funçao para validar os campos
   function validateLogin() {
@@ -25,20 +50,6 @@ export default function Login() {
       return false;
     }
     return true;
-  }
-
-  function handleLogin() {
-    if (!validateLogin()) return;
-
-    //logica para checar username/email/telefone futuramente
-    const isUserValid = true; //simulaçao
-
-    if (!isUserValid) {
-      Alert.alert('Erro', 'Usuário ou senha inválidos.');
-      return;
-    }
-
-    router.push('/menuInicial');
   }
 
   return (
@@ -86,7 +97,7 @@ export default function Login() {
 
         {/* Botão Entrar */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={[styles.button, styles.primaryButton]} onPress={handleLogin}>
+          <TouchableOpacity style={[styles.button, styles.primaryButton]} onPress={signInWithEmail}>
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
         </View>
