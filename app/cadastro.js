@@ -2,7 +2,16 @@ import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, AppState, Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { supabase } from '../utils/supabase';
+
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') {
+    supabase.auth.startAutoRefresh()
+  } else {
+    supabase.auth.stopAutoRefresh()
+  }
+})
 
 export default function Cadastro() {
   const router = useRouter();
@@ -16,13 +25,60 @@ export default function Cadastro() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
+  const [sobrenome, setSobrenome] = useState('');
   const [email, setEmail] = useState('');
   const [errorFields, setErrorFields] = useState([]);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
   const [shortPassword, setShortPassword] = useState(false);
-  const [usernameInUse, setUsernameInUse] = useState(false); //simulacao ate integrar com o back
   const [invalidEmail, setInvalidEmail] = useState(false);
+  const [loading, setLoading] = useState(false)
+
+  async function signUpEmail() {
+    setLoading(true)
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signUp({
+      email,
+      password,
+    })
+    if (error) {
+      Alert.alert(error.message)
+      setLoading(false)
+      return;
+    }
+    const [day, month, year] = birthDate.split("/");
+    const dataDeNascimentoFormatada = `${year}-${month}-${day}`;
+    const telefoneLimpo = phone.replace(/\D/g, "");
+    let nomeTabela = null;
+    if (role === 'idoso') {
+      nomeTabela = "paciente";
+    } else {
+      nomeTabela = "cuidador";
+    }
+    if (user) {
+      const { error: insertError } = await supabase.from(nomeTabela).insert([
+        {
+          nome: name,
+          sobrenome: sobrenome,
+          telefone: telefoneLimpo,
+          email: email,
+          data_de_nascimento: dataDeNascimentoFormatada,
+          id_user: user.id,
+        },
+      ]);
+
+      if (insertError) {
+        console.log("Erro ao inserir no banco:", insertError);
+        Alert.alert("Erro ao cadastrar usuário no banco.");
+      }
+    }
+
+    console.log("SignUp result:", { user, error });
+    console.log("Cadastro realizado! Verifique seu e-mail. :)");
+    Alert.alert("Cadastro realizado!")
+    setLoading(false);
+  }
 
   function chooseImageSource() {
     Alert.alert(
@@ -83,7 +139,7 @@ export default function Cadastro() {
   }
 
   function handlePhoneChange(text) {
-    let cleaned = text.replace(/\D/g, '');
+    let cleaned = text.replace(/\D/g, "");
     if (cleaned.length <= 2) {
       setPhone(cleaned);
       return;
@@ -107,7 +163,7 @@ export default function Cadastro() {
   function handleRegister() {
     const emptyFields = [];
     if (!name.trim()) emptyFields.push('name');
-    if (!username.trim()) emptyFields.push('username');
+    if (!sobrenome.trim()) emptyFields.push('sobrenome');
     if (!email.trim()) emptyFields.push('email');
     if (!birthDate.trim()) emptyFields.push('birthDate');
     if (!phone.trim()) emptyFields.push('phone');
@@ -142,16 +198,13 @@ export default function Cadastro() {
 
     setPasswordMismatch(false);
 
-    // integrar a logica para verificar se o usuario ja existe
-    if (usernameInUse) {
-      return;
-    }
-
     if (role === 'idoso') {
       router.push('/adicionarCuidador'); //nomes provisorios enquanto as telas não foram criadas
     } else {
       router.push('/inserirCodigoIdoso');
     }
+
+    signUpEmail();
   }
 
   return (
@@ -183,7 +236,7 @@ export default function Cadastro() {
 
             <View style={styles.inputContainer}>
               <TextInput
-                placeholder="Nome completo"
+                placeholder="Nome"
                 placeholderTextColor={errorFields.includes('name') ? 'red' : '#321904'}
                 style={styles.input}
                 value={name}
@@ -191,17 +244,12 @@ export default function Cadastro() {
               />
 
               <TextInput
-                placeholder="Usuário"
-                placeholderTextColor={errorFields.includes('username') ? 'red' : '#321904'}
+                placeholder="Sobrenome"
+                placeholderTextColor={errorFields.includes('sobrenome') ? 'red' : '#321904'}
                 style={styles.input}
-                value={username}
-                onChangeText={setUsername}
+                value={sobrenome}
+                onChangeText={setSobrenome}
               />
-              {usernameInUse && (
-                <Text style={{ color: 'red', fontSize: 12, marginBottom: 10 }}>
-                  Este nome de usuário já está em uso.
-                </Text>
-              )}
 
               <TextInput
                 placeholder="E-mail"
@@ -290,7 +338,6 @@ export default function Cadastro() {
                 </TouchableOpacity>
               </View>
             </View>
-
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={[styles.button, styles.primaryButton]} onPress={handleRegister}>
                 <Text style={styles.buttonText}>Cadastrar</Text>
