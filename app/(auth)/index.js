@@ -8,11 +8,11 @@ export default function Home() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
 
-      {/* Nome do aplicativo */}
-      <View style={styles.contentContainer}>
+        {/* Nome do aplicativo */}
+        <View style={styles.contentContainer}>
           {/* Imagem */}
           <Image
-            source={require('../assets/images/emah-image.png')}
+            source={require('../../assets/images/emah-image.png')}
             style={styles.image}
             resizeMode="contain"
           />
@@ -23,23 +23,23 @@ export default function Home() {
           </View>
         </View>
 
-      {/* Botões */}
+        {/* Botões */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity 
-            style={[styles.button, styles.primaryButton]} 
+          <TouchableOpacity
+            style={[styles.button, styles.primaryButton]}
             onPress={() => router.push('/login')}
           >
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={[styles.button, styles.secondaryButton]} 
+          <TouchableOpacity
+            style={[styles.button, styles.secondaryButton]}
             onPress={() => router.push('/cadastro')}
           >
             <Text style={styles.buttonText}>Cadastre-se</Text>
           </TouchableOpacity>
         </View>
-        
+
       </View>
     </SafeAreaView>
   );
