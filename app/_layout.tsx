@@ -49,6 +49,7 @@ function MainLayout() {
             <Stack.Screen name="(app)/idosoAdicionado" />
             <Stack.Screen name="(app)/inserirCodigoIdoso" />
             <Stack.Screen name="(app)/remedios" />
+            <Stack.Screen name="(app)/adicionarRemedio" />
         </Stack>
     )
 }
