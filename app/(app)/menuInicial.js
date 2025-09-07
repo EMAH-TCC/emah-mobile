@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useRouter } from 'expo-router';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -43,6 +44,10 @@ export default function MenuInicial() {
               <Text style={styles.menuText}>Agenda</Text>
             </TouchableOpacity>
           </View>
+          <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/bpm')}>
+            <FontAwesome6 name="heart-pulse" size={38} color="#321904" />
+            <Text style={styles.menuText}>Batimentos Cardíacos</Text>
+          </TouchableOpacity>
         </View>
 
       </View>
