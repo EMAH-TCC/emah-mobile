@@ -1,9 +1,63 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { supabase } from '../../utils/supabase';
 
+async function getUser() {
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error) {
+    console.log("Erro: ", error);
+    return null;
+  }
+
+  return data.user;
+}
+
+async function getUserId(userId) {
+  const { data, error } = await supabase.from('paciente').select('id').eq('id_user', userId).single()
+
+  if (error) {
+    console.log("Erro busca: ", error);
+    return null;
+  }
+
+  return data.id
+}
+
+async function selectNomeUser(pacienteId) {
+  const { data, error } = await supabase
+    .from('paciente')
+    .select('nome')
+    .eq('id', pacienteId)
+
+  if (error) {
+    console.error("Erro ao consultar:", error)
+    return null
+  }
+
+  return data
+}
 export default function MenuInicial() {
   const router = useRouter();
+  const [nomeUser, setNomeUser] = useState([]);
+
+  useEffect(() => {
+    async function carregarNomeUser() {
+      const user = await getUser();
+      if (!user) {
+        return
+      }
+      const pacienteId = await getUserId(user.id)
+      if (!pacienteId) {
+        return
+      }
+      const data = await selectNomeUser(pacienteId);
+      setNomeUser(data[0].nome);
+    }
+    carregarNomeUser();
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -11,7 +65,7 @@ export default function MenuInicial() {
 
         {/* Cabeçalho */}
         <View style={styles.header}>
-          <Text style={styles.greetingText}>Olá</Text>
+          <Text style={styles.greetingText}>Olá, {nomeUser}!</Text>
           <TouchableOpacity onPress={() => router.push('/perfil')}>
             <Ionicons name="person-outline" size={28} color="#321904" />
           </TouchableOpacity>
@@ -60,6 +114,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
+    paddingTop: 20,
     position: 'absolute',
     top: 10,
     left: 20,
@@ -70,7 +125,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   greetingText: {
-    fontSize: 18,
+    fontSize: 20,
     color: '#321904',
     fontWeight: 'bold',
   },

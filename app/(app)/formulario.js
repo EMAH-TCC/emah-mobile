@@ -2,7 +2,43 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { supabase } from '../../utils/supabase';
 
+async function getUser() {
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error) {
+    console.log("Erro: ", error);
+    return null;
+  }
+
+  return data.user;
+}
+
+async function getUserId(userId) {
+  const { data, error } = await supabase.from('paciente').select('id').eq('id_user', userId).single()
+
+  if (error) {
+    console.log("Erro busca: ", error);
+    return null;
+  }
+
+  return data.id
+}
+
+async function addQuestionario(pacienteId, temperatura, peso, pressaoSistolica, pressaoDiastolica, remedios, notas, dataInsercao) {
+  const { data, error } = await supabase
+    .from('questionario')
+    .insert([{ id_paciente: pacienteId, temperatura: temperatura, peso: peso, pressao_sistolica: pressaoSistolica, pressao_diastolica: pressaoDiastolica, remedios: remedios, notas: notas, data: dataInsercao }])
+    .select()
+
+  if (error) {
+    console.error("Erro ao inserir consulta:", error)
+    return null
+  }
+
+  return data
+}
 export default function Formulario() {
   const router = useRouter();
 
@@ -11,6 +47,10 @@ export default function Formulario() {
   const [humorSelecionado, setHumorSelecionado] = useState({});
   const [remedios, setRemedios] = useState([""]);
   const [notas, setNotas] = useState("");
+  const [temperatura, setTemperatura] = useState([""]);
+  const [peso, setPeso] = useState([""]);
+  const [pressaoSistolica, setPressaoSistolica] = useState([""]);
+  const [pressaoDiastolica, setPressaoDiastolica] = useState([""]);
 
   const toggleItem = (state, setState, item) => {
     setState({
@@ -54,6 +94,21 @@ export default function Formulario() {
     { nome: "...", icon: "ellipsis-horizontal-outline" },
   ];
 
+  async function salvarQuestionarioNoBanco() {
+    const user = await getUser();
+    if (!user) {
+      return
+    }
+
+    const pacienteId = await getUserId(user.id);
+    if (!pacienteId) {
+      return
+    }
+    const dataInsercao = new Date();
+    const questionario = await addQuestionario(pacienteId, temperatura, peso, pressaoSistolica, pressaoDiastolica, remedios, notas, dataInsercao);
+    console.log("Questionário Registrado ", questionario);
+    router.push('/menuInicial');
+  }
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
@@ -95,6 +150,8 @@ export default function Formulario() {
           <TextInput
             style={styles.input}
             placeholder="Temperatura / °C"
+            value={temperatura}
+            onChangeText={setTemperatura}
             placeholderTextColor="#7a6c5d"
           />
 
@@ -104,6 +161,8 @@ export default function Formulario() {
           <TextInput
             style={styles.input}
             placeholder="Peso / Kg"
+            value={peso}
+            onChangeText={setPeso}
             placeholderTextColor="#7a6c5d"
           />
 
@@ -135,9 +194,22 @@ export default function Formulario() {
           <View style={styles.divider} />
 
           {/* Pressão */}
+          <Text style={styles.sectionTitle}>Pressão</Text>
           <TextInput
-            style={styles.input}
-            placeholder="Pressão (ex: 120/80)"
+            style={styles.inputPressao}
+            keyboardType='number-pad'
+            value={pressaoSistolica}
+            onChangeText={setPressaoSistolica}
+            placeholder="Maior valor"
+            placeholderTextColor="#7a6c5d"
+          />
+          <View style={styles.barraHorizontal}></View>
+          <TextInput
+            style={styles.inputPressao}
+            keyboardType='number-pad'
+            value={pressaoDiastolica}
+            onChangeText={setPressaoDiastolica}
+            placeholder="Menor valor"
             placeholderTextColor="#7a6c5d"
           />
 
@@ -177,7 +249,7 @@ export default function Formulario() {
           />
 
           {/* Botão salvar */}
-          <TouchableOpacity style={styles.saveButton}>
+          <TouchableOpacity style={styles.saveButton} onPress={salvarQuestionarioNoBanco}>
             <Text style={styles.saveButtonText}>Salvar</Text>
           </TouchableOpacity>
         </ScrollView>
@@ -232,6 +304,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#321904',
   },
+  inputPressao: {
+    backgroundColor: '#EDE7F6',
+    width: 110,
+    padding: 14,
+    borderRadius: 6,
+    marginBottom: 16,
+    fontSize: 16,
+    color: '#321904',
+  },
   divider: {
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
@@ -272,4 +353,14 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
   },
+  separator: {
+    fontSize: 20,
+    marginHorizontal: 5,
+  },
+  barraHorizontal: {
+    height: 1,
+    backgroundColor: 'grey',
+    width: 115,
+    marginVertical: 10,
+  }
 });
