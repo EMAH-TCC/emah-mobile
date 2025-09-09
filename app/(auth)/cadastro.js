@@ -3,7 +3,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Alert, AppState, Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { supabase } from '../utils/supabase';
+import { supabase } from '../../utils/supabase';
 
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
