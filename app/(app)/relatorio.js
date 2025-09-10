@@ -177,7 +177,7 @@ export default function Relatorio() {
                     <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={fecharMenu}>
                         <View style={[styles.menuContainer, { top: menuPosition.top, right: menuPosition.right }]}>
                             <TouchableOpacity style={styles.menuItem} onPress={removerRemedio}>
-                                <Text style={styles.menuText}>Remover remédio</Text>
+                                <Text style={styles.menuText}>Remover relatório</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.menuItem} onPress={alterarDados}>
                                 <Text style={styles.menuText}>Alterar dados</Text>
