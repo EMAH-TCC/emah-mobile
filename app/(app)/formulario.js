@@ -106,7 +106,6 @@ export default function Formulario() {
     }
     const dataInsercao = new Date();
     const questionario = await addQuestionario(pacienteId, temperatura, peso, pressaoSistolica, pressaoDiastolica, remedios, notas, dataInsercao);
-    console.log("Questionário Registrado ", questionario);
     router.push('/menuInicial');
   }
   return (
