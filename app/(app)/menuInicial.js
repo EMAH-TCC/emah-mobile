@@ -1,18 +1,70 @@
 import { Ionicons } from '@expo/vector-icons';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useRouter } from 'expo-router';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { supabase } from '../../utils/supabase';
 
+async function getUser() {
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error) {
+    console.log("Erro: ", error);
+    return null;
+  }
+
+  return data.user;
+}
+
+async function getUserId(userId) {
+  const { data, error } = await supabase.from('paciente').select('id').eq('id_user', userId).single()
+
+  if (error) {
+    console.log("Erro busca: ", error);
+    return null;
+  }
+
+  return data.id
+}
+
+async function selectNomeUser(pacienteId) {
+  const { data, error } = await supabase
+    .from('paciente')
+    .select('nome')
+    .eq('id', pacienteId)
+
+  if (error) {
+    console.error("Erro ao consultar:", error)
+    return null
+  }
+
+  return data
+}
 export default function MenuInicial() {
   const router = useRouter();
+  const [nomeUser, setNomeUser] = useState([]);
+
+  useEffect(() => {
+    async function carregarNomeUser() {
+      const user = await getUser();
+      if (!user) {
+        return
+      }
+      const pacienteId = await getUserId(user.id)
+      if (!pacienteId) {
+        return
+      }
+      const data = await selectNomeUser(pacienteId);
+      setNomeUser(data[0].nome);
+    }
+    carregarNomeUser();
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-
         {/* Cabeçalho */}
         <View style={styles.header}>
-          <Text style={styles.greetingText}>Olá</Text>
+          <Text style={styles.greetingText}>Olá, {nomeUser}!</Text>
           <TouchableOpacity onPress={() => router.push('/perfil')}>
             <Ionicons name="person-outline" size={28} color="#321904" />
           </TouchableOpacity>
@@ -21,8 +73,8 @@ export default function MenuInicial() {
         {/* Parte laranja */}
         <View style={styles.topBox}></View>
 
-        {/* Parte inferior dos botões*/}
-        <View style={styles.bottomBox}>
+        {/* Parte inferior dos botões */}
+        <ScrollView contentContainerStyle={styles.bottomBox}>
           <View style={styles.grid}>
             <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/formulario')}>
               <Ionicons name="clipboard-outline" size={38} color="#321904" />
@@ -43,28 +95,29 @@ export default function MenuInicial() {
               <Ionicons name="calendar-outline" size={38} color="#321904" />
               <Text style={styles.menuText}>Agenda</Text>
             </TouchableOpacity>
-          </View>
-          <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/bpm')}>
-            <FontAwesome6 name="heart-pulse" size={38} color="#321904" />
-            <Text style={styles.menuText}>Batimentos Cardíacos</Text>
-          </TouchableOpacity>
-        </View>
 
+            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/bpm')}>
+              <Ionicons name="heart-circle" size={38} color="#321904" />
+              <Text style={styles.menuText}>Batimentos</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/adicionarCuidador')}>
+              <Ionicons name="person" size={38} color="#321904" />
+              <Text style={styles.menuText}>Cuidadores</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  container: {
-    flex: 1,
-  },
+  safeArea: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1 },
 
   header: {
+    paddingTop: 20,
     position: 'absolute',
     top: 10,
     left: 20,
@@ -74,35 +127,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 10,
   },
-  greetingText: {
-    fontSize: 18,
-    color: '#321904',
-    fontWeight: 'bold',
-  },
+  greetingText: { fontSize: 20, color: '#321904', fontWeight: 'bold' },
 
   topBox: {
-    flex: 1,
+    height: '43%',
     backgroundColor: '#F28B0C',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
 
   bottomBox: {
-    flex: 1,
-    backgroundColor: '#fff',
     paddingHorizontal: 15,
-    paddingVertical: 15,
+    paddingTop: 20,
+    paddingBottom: 40,
   },
 
   grid: {
-    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
   menuButton: {
     width: '47%',
-    height: '45%',
+    aspectRatio: 1, // mantém proporção quadrada
     backgroundColor: '#E5D9F2',
     borderRadius: 12,
     justifyContent: 'center',
@@ -114,10 +161,5 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     marginBottom: 18,
   },
-  menuText: {
-    marginTop: 8,
-    fontSize: 18,
-    color: '#321904',
-    fontWeight: '500',
-  },
+  menuText: { marginTop: 8, fontSize: 18, color: '#321904', fontWeight: '500' },
 });

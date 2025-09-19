@@ -82,12 +82,9 @@ export default function AdicionarRemedio() {
         }
         const remedio = await addRemedio(pacienteId, nome, frequencia, dose, horarios);
         console.log("Remédio adicionado: ", remedio);
-    }
-
-    const salvarRemedio = () => {
-        console.log('Remédio salvo:', { id: params.id, nome, dose, frequencia, horario });
         router.push('/remedios'); // volta para a lista
-    };
+
+    }
 
     return (
         <SafeAreaView style={styles.safeArea}>

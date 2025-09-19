@@ -1,19 +1,70 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { supabase } from '../../utils/supabase';
+
+async function getUser() {
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error) {
+    console.log("Erro: ", error);
+    return null;
+  }
+
+  return data.user;
+}
+
+async function getUserId(userId) {
+  const { data, error } = await supabase.from('paciente').select('id').eq('id_user', userId).single()
+
+  if (error) {
+    console.log("Erro busca: ", error);
+    return null;
+  }
+
+  return data.id
+}
+
+async function selectRemedios(pacienteId) {
+  const { data, error } = await supabase
+    .from('medicamento')
+    .select('id, nome')
+    .eq('id_paciente', pacienteId)
+
+  if (error) {
+    console.error("Erro ao inserir consulta:", error)
+    return null
+  }
+
+  return data
+}
 
 export default function Remedios() {
   const router = useRouter();
 
-  const [remedios, setRemedios] = useState([
-    { id: '1', nome: 'Nome do remédio', dose: 'Dose', frequencia: 'Frequência', horario: 'Horário' },
-    { id: '2', nome: 'Nome do remédio', dose: 'Dose', frequencia: 'Frequência', horario: 'Horário' },
-  ]);
-
+  const [remedios, setRemedios] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedRemedio, setSelectedRemedio] = useState(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
+
+  useEffect(() => {
+    async function carregarRemedios() {
+      const user = await getUser();
+      if (!user) {
+        return
+      }
+      const pacienteId = await getUserId(user.id)
+      if (!pacienteId) {
+        return
+      }
+      const remedios = await selectRemedios(pacienteId);
+      if (remedios) {
+        setRemedios(remedios);
+      }
+    }
+    carregarRemedios();
+  }, []);
 
   const abrirMenu = (item, event) => {
     const { pageY } = event.nativeEvent;
@@ -29,7 +80,10 @@ export default function Remedios() {
 
   const removerRemedio = () => {
     if (selectedRemedio) {
-      setRemedios(remedios.filter(remedio => remedio.id !== selectedRemedio.id));
+      router.push({
+        pathname: '/removerRemedio',
+        params: selectedRemedio,
+      });
       fecharMenu();
     }
   };
@@ -47,10 +101,6 @@ export default function Remedios() {
   const renderRemedio = ({ item }) => (
     <View style={styles.card}>
       <Text style={styles.cardText}>{item.nome}</Text>
-      <Text style={styles.cardText}>{item.dose}</Text>
-      <Text style={styles.cardText}>{item.frequencia}</Text>
-      <Text style={styles.cardText}>{item.horario}</Text>
-
       {/* Botão de opções */}
       <TouchableOpacity
         style={styles.optionsButton}
@@ -69,7 +119,7 @@ export default function Remedios() {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.container}>
-            
+
             {/* Header com botão de voltar e o titulo */}
             <View style={styles.header}>
               <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
