@@ -1,14 +1,64 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { supabase } from '../../utils/supabase';
+
+async function getUser() {
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error) {
+    console.log("Erro: ", error);
+    return null;
+  }
+
+  return data.user;
+}
+
+async function getUserId(userId) {
+  const { data, error } = await supabase.from('paciente').select('id').eq('id_user', userId).single()
+
+  if (error) {
+    console.log("Erro busca: ", error);
+    return null;
+  }
+
+  return data.id
+}
+
+async function criarCodigo(pacienteId) {
+  const { data, error } = await supabase.rpc('criar_codigo_conexao', { codigo_paciente_id: pacienteId });
+
+  if (error) {
+    console.error('Erro ao gerar código:', error);
+    return null;
+  }
+  return data;
+}
+
 
 export default function CodigoDoIdoso() {
   const router = useRouter();
+  const [codigo, setCodigo] = useState(null);
 
-  //gera um codigo aleatorio apenas para simulaçao (6 digitos
-  const [codigo] = useState(Math.floor(100000 + Math.random() * 900000).toString());
+  useEffect(() => {
+    async function carregarCodigo() {
+      const user = await getUser();
+      if (!user) {
+        return
+      }
+      const pacienteId = await getUserId(user.id)
+      if (!pacienteId) {
+        return
+      }
+      const codigo = await criarCodigo(pacienteId);
+      if (codigo) {
+        setCodigo(codigo);
+      }
+    }
+    carregarCodigo();
+  }, []);
 
   //funçao para copiar para a area de transferencia
   async function copiarCodigo() {
