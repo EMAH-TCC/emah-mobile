@@ -57,7 +57,7 @@ export default function Cadastro() {
       nomeTabela = "cuidador";
     }
     if (user) {
-      const { error: insertError } = await supabase.from(nomeTabela).insert([
+      const { data: usuarioInserido, error: insertError } = await supabase.from(nomeTabela).insert([
         {
           nome: name,
           sobrenome: sobrenome,
@@ -66,16 +66,27 @@ export default function Cadastro() {
           data_de_nascimento: dataDeNascimentoFormatada,
           id_user: user.id,
         },
-      ]);
+      ]).select("id")
+        .single();
 
       if (insertError) {
         console.log("Erro ao inserir no banco:", insertError);
         Alert.alert("Erro ao cadastrar usuário no banco.");
+        return;
+      }
+      const { error: insertError2 } = await supabase.from("usuarios").insert([
+        {
+          id: usuarioInserido.id,
+          tipo_usuario: nomeTabela,
+        },
+      ]);
+
+      if (insertError2) {
+        console.log("Erro ao inserir na tabela de usuários:", insertError2);
+        Alert.alert("Erro ao cadastrar usuário na tabela de usuários.");
       }
     }
 
-    console.log("SignUp result:", { user, error });
-    console.log("Cadastro realizado! Verifique seu e-mail. :)");
     Alert.alert("Cadastro realizado!")
     setLoading(false);
   }

@@ -1,7 +1,7 @@
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/utils/supabase";
 import { router, Stack } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function RootLayout() {
     return (
@@ -14,42 +14,86 @@ export default function RootLayout() {
 
 function MainLayout() {
     const { setAuth } = useAuth()
+    const [tipo_usuario, setTipoUsuario] = useState<"paciente" | "cuidador" | null>(null);
+    async function getUser() {
+        const { data, error } = await supabase.auth.getUser();
+        if (error) {
+            console.log("Erro: ", error);
+            return null;
+        }
+
+        return data.user;
+    }
+    async function getTipoUsuario(userId: string) {
+        const { data, error } = await supabase
+            .from("usuarios")
+            .select("tipo_usuario")
+            .eq("id_user", userId)
+            .single();
+
+        if (error) {
+            console.log("Erro busca: ", error);
+            return null;
+        }
+
+        return data.tipo_usuario;
+    }
 
     useEffect(() => {
-        supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: authListener } = supabase.auth.onAuthStateChange(async (_event, session) => {
+            if (session?.user) {
+                const user = await getUser();
+                if (!user?.id) {
+                    console.log("Usuário não encontrado");
+                    return;
+                }
 
-            if (session) {
-                setAuth(session.user)
-                router.replace('/(app)/menuInicial')
+                const tipo_usuario = await getTipoUsuario(user.id);
+
+                setAuth(session.user);
+
+                if (tipo_usuario === "paciente") {
+                    router.replace('/idoso/menuInicial');
+                } else if (tipo_usuario === "cuidador") {
+                    router.replace('/cuidador/menuInicial');
+                }
                 return;
             }
 
-            setAuth(null)
-            router.replace('/')
-
+            setAuth(null);
+            router.replace('/');
         });
+
+        return () => {
+            authListener?.subscription.unsubscribe();
+        };
     }, []);
 
     return (
         <Stack>
             {/* Rotas auth */}
             <Stack.Screen name="(auth)/index" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)/login" />
-            <Stack.Screen name="(auth)/cadastro" />
+            <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)/cadastro" options={{ headerShown: false }} />
 
-            {/* Rotas app */}
-            <Stack.Screen name="(app)/menuInicial" options={{ headerShown: false }} />
-            <Stack.Screen name="(app)/perfil" />
-            <Stack.Screen name="(app)/adicionarCuidador" />
-            <Stack.Screen name="(app)/codigoDoIdoso" />
-            <Stack.Screen name="(app)/cuidadorAdicionado" />
-            <Stack.Screen name="(app)/editarRemedio" />
-            <Stack.Screen name="(app)/erroAdicionarCuidador" />
-            <Stack.Screen name="(app)/erroAdicionarIdoso" />
-            <Stack.Screen name="(app)/idosoAdicionado" />
-            <Stack.Screen name="(app)/inserirCodigoIdoso" />
-            <Stack.Screen name="(app)/remedios" />
-            <Stack.Screen name="(app)/adicionarRemedio" />
+            {/* Rotas idoso */}
+            <Stack.Screen name="idoso/menuInicial" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/perfil" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/adicionarCuidador" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/codigoDoIdoso" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/cuidadorAdicionado" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/editarRemedio" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/erroAdicionarCuidador" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/remedios" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/bpm" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/formulario" options={{ headerShown: false }} />
+
+            {/* Rotas cuidador */}
+            <Stack.Screen name="cuidador/menuInicial" options={{ headerShown: false }} />
+            <Stack.Screen name="cuidador/erroAdicionarIdoso" options={{ headerShown: false }} />
+            <Stack.Screen name="cuidador/idosoAdicionado" options={{ headerShown: false }} />
+            <Stack.Screen name="cuidador/inserirCodigoIdoso" options={{ headerShown: false }} />
+            <Stack.Screen name="cuidador/perfil" options={{ headerShown: false }} />
         </Stack>
     )
 }

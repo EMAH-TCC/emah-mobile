@@ -21,7 +21,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ login: false, password: false });
   const [loading, setLoading] = useState(false);
-
+  const [tipo_usuario, setTipoUsuario] = useState(null);
 
   async function signInWithEmail() {
     if (!validateLogin()) return;
@@ -33,7 +33,19 @@ export default function Login() {
     if (error) {
       Alert.alert(error.message)
     } else {
-      router.push('/menuInicial');
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data, error } = await supabase.from("usuarios").select("tipo_usuario").eq("id_user", session.user.id).single();
+        if (data) {
+          setTipoUsuario(data.tipo_usuario);
+
+          if (data.tipo_usuario === "paciente") {
+            router.replace('../idoso/menuInicial');
+          } else if (data.tipo_usuario === "cuidador") {
+            router.replace('../cuidador/menuInicial');
+          }
+        }
+      }
     }
   }
 
@@ -50,6 +62,7 @@ export default function Login() {
       return false;
     }
     return true;
+
   }
 
   return (

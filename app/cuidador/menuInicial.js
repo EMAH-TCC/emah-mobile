@@ -16,7 +16,7 @@ async function getUser() {
 }
 
 async function getUserId(userId) {
-  const { data, error } = await supabase.from('paciente').select('id').eq('id_user', userId).single()
+  const { data, error } = await supabase.from('usuarios').select('id').eq('id_user', userId).single()
 
   if (error) {
     console.log("Erro busca: ", error);
@@ -28,7 +28,7 @@ async function getUserId(userId) {
 
 async function selectNomeUser(pacienteId) {
   const { data, error } = await supabase
-    .from('paciente')
+    .from('cuidador')
     .select('nome')
     .eq('id', pacienteId)
 
@@ -76,34 +76,10 @@ export default function MenuInicial() {
         {/* Parte inferior dos botões */}
         <ScrollView contentContainerStyle={styles.bottomBox}>
           <View style={styles.grid}>
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/formulario')}>
-              <Ionicons name="clipboard-outline" size={38} color="#321904" />
-              <Text style={styles.menuText}>Formulário</Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/remedios')}>
-              <Ionicons name="medkit-outline" size={38} color="#321904" />
-              <Text style={styles.menuText}>Remédios</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/relatorio')}>
-              <Ionicons name="heart-outline" size={38} color="#321904" />
-              <Text style={styles.menuText}>Relatório</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/agenda')}>
-              <Ionicons name="calendar-outline" size={38} color="#321904" />
-              <Text style={styles.menuText}>Agenda</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/bpm')}>
-              <Ionicons name="heart-circle" size={38} color="#321904" />
-              <Text style={styles.menuText}>Batimentos</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/adicionarCuidador')}>
+            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/cuidador/inserirCodigoIdoso')}>
               <Ionicons name="person" size={38} color="#321904" />
-              <Text style={styles.menuText}>Cuidadores</Text>
+              <Text style={styles.menuText}>Adicionar Idoso</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -148,8 +124,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   menuButton: {
-    width: '47%',
-    aspectRatio: 1, // mantém proporção quadrada
+    width: '100%',
+    height: 100,
     backgroundColor: '#E5D9F2',
     borderRadius: 12,
     justifyContent: 'center',

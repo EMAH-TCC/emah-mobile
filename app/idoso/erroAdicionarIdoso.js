@@ -2,40 +2,43 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function AdicionarCuidador() {
+export default function ErroAdicionarIdoso({ route }) {
   const router = useRouter();
+
+  const { nomeIdoso = 'Fulano' } = route?.params || {};
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
 
-        {/* Ícone */}
-        <View style={styles.iconContainer}>
-          <Ionicons name="person-add-outline" size={60} color="#321904" />
+        {/* Ícone triste */}
+        <View style={styles.header}>
+          <Ionicons name="sad-outline" size={80} color="#321904" />
         </View>
 
         {/* Texto */}
-        <Text style={styles.title}>Deseja adicionar um cuidador?</Text>
+        <View style={styles.content}>
+          <Text style={styles.infoText}>
+            Não foi possível te adicionar como cuidador de {nomeIdoso}
+          </Text>
+        </View>
 
         {/* Botões */}
-        <View style={styles.buttonContainer}>
+        <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.button, styles.primaryButton]}
-            onPress={() => router.push('/codigoDoIdoso')} //tela que ira mostrar o codigo
+            onPress={() => router.push('/menuInicial')}
           >
-            <Text style={styles.buttonText}>Sim</Text>
+            <Text style={styles.buttonText}>Sair</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.secondaryButton]}
-            onPress={() => router.push('/menuInicial')} //tela inicial (menu) do aplicativo
+            onPress={() => router.push('/inserirCodigoIdoso')}
           >
-            <Text style={styles.buttonText}>Não</Text>
+            <Text style={styles.buttonText}>Tentar novamente</Text>
           </TouchableOpacity>
         </View>
-
-        {/* Texto informativo */}
-        <Text style={styles.infoText}>Você será redirecionado para o menu inicial</Text>
 
       </View>
     </SafeAreaView>
@@ -50,49 +53,48 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+  },
+  header: {
+    alignItems: 'center',
+    marginTop: 80,
+    marginBottom: 20,
+  },
+  content: {
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 40,
   },
-  iconContainer: {
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 22,
+  infoText: {
     color: '#321904',
-    fontWeight: 'bold',
+    fontSize: 20,
     textAlign: 'center',
-    marginBottom: 30,
+    fontWeight: 'bold',
+    maxWidth: 320,
   },
-  buttonContainer: {
-    width: '100%',
-    maxWidth: 300,
+  footer: {
+    alignItems: 'center',
     marginBottom: 20,
   },
   button: {
     paddingVertical: 14,
-    borderRadius: 8,
+    borderRadius: 6,
     alignItems: 'center',
     marginBottom: 12,
     width: '100%',
-    borderWidth: 1,
-    borderColor: '#F28B0C',
+    maxWidth: 300,
   },
   primaryButton: {
     backgroundColor: '#F28B0C',
   },
   secondaryButton: {
-    backgroundColor: '#fff',
+    backgroundColor: '#FBB65A',
   },
   buttonText: {
     color: '#321904',
     fontWeight: 'bold',
     fontSize: 16,
-  },
-  infoText: {
-    color: '#321904',
-    fontSize: 14,
-    textAlign: 'center',
   },
 });
