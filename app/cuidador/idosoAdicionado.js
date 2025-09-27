@@ -1,20 +1,20 @@
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function IdosoAdicionado({ route }) {
+export default function IdosoAdicionado() {
   const router = useRouter();
+  const params = useLocalSearchParams();
 
-  //devera recebe os dados do cuidador (nome e foto)
-  const { nomeIdoso = 'Fulano', fotoIdoso = null } = route?.params || {};
+  const nomeIdoso = params.nome_paciente
+  console.log(nomeIdoso)
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
 
         {/* Foto do perfil */}
-        <View style={styles.header}>
-          {fotoIdoso ? (
+
+        {/*fotoIdoso ? (
             <Image source={{ uri: fotoIdoso }} style={styles.profileImage} />
           ) : (
             <View style={styles.profileImage}>

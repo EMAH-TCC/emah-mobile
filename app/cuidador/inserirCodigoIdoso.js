@@ -2,12 +2,83 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, } from 'react-native';
+import { supabase } from '../../utils/supabase';
 
+async function getUser() {
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error) {
+    console.log("Erro: ", error);
+    return null;
+  }
+
+  return data.user;
+}
+
+async function getUserId(userId) {
+  const { data, error } = await supabase.from('usuarios').select('id').eq('id_user', userId).single()
+
+  if (error) {
+    console.log("Erro busca: ", error);
+    return null;
+  }
+
+  return data.id
+}
+
+async function verificarCodigoConexao(codigo) {
+  const { data, error } = await supabase.rpc('verificar_codigo_conexao', { codigo_inserido: codigo });
+  if (data) {
+    console.log("Tem dado: ", data);
+  }
+  if (error) {
+    console.error('Erro ao verificar código código:', error);
+    return null;
+  }
+  return data;
+}
+async function selectNomeCuidador(userId) {
+  const { data, error } = await supabase
+    .from('cuidador')
+    .select('nome')
+    .eq('id', userId)
+
+  if (error) {
+    console.error("Erro ao consultar:", error)
+    return null
+  }
+
+  return data
+}
 export default function InserirCodigoIdoso() {
   const router = useRouter();
   const [codigo, setCodigo] = useState('');
   const [erro, setErro] = useState(false);
 
+  async function verificarCodigo() {
+    console.log("Chamou a função");
+    const user = await getUser();
+    if (!user) {
+      return
+    }
+    const userId = await getUserId(user.id)
+    if (!userId) {
+      return
+    }
+    const dadosPaciente = await verificarCodigoConexao(codigo);
+    if (!dadosPaciente || dadosPaciente.length === 0) {
+      setErro(true);
+      Alert.alert('Código inválido', 'Verifique o código e tente novamente.');
+    }
+    else {
+      const nome_paciente = dadosPaciente[0].nome_paciente
+      const id_paciente = dadosPaciente[0].id_paciente
+      router.push({
+        pathname: '/cuidador/confirmacaoIdoso',
+        params: dadosPaciente[0],
+      });
+    }
+  }
   function handleConnect() {
     // campo vazio
     if (codigo.trim() === '') {
@@ -15,13 +86,8 @@ export default function InserirCodigoIdoso() {
       Alert.alert('Atenção', 'Por favor, preencha o campo do código.');
       return;
     }
-
-    // validaçao de exemplo
-    if (codigo === '123456') {
-      router.push('/idosoAdicionado');
-    } else {
-      setErro(true);
-      Alert.alert('Código inválido', 'Verifique o código e tente novamente.');
+    else {
+      verificarCodigo();
     }
   }
 

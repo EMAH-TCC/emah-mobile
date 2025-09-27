@@ -25,20 +25,20 @@ export default function Login() {
 
   async function signInWithEmail() {
     if (!validateLogin()) return;
-    setLoading(true)
+    //setLoading(true)
     const { error } = await supabase.auth.signInWithPassword({
       email: loginInput,
       password: password,
     })
     if (error) {
       Alert.alert(error.message)
+
     } else {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
         const { data, error } = await supabase.from("usuarios").select("tipo_usuario").eq("id_user", session.user.id).single();
         if (data) {
           setTipoUsuario(data.tipo_usuario);
-
           if (data.tipo_usuario === "paciente") {
             router.replace('../idoso/menuInicial');
           } else if (data.tipo_usuario === "cuidador") {

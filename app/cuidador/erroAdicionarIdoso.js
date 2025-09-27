@@ -1,11 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ErroAdicionarIdoso({ route }) {
   const router = useRouter();
+  const params = useLocalSearchParams();
 
-  const { nomeIdoso = 'Fulano' } = route?.params || {};
+  const nomeIdoso = params.nome_paciente
 
   return (
     <SafeAreaView style={styles.safeArea}>

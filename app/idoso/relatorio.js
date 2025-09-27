@@ -149,7 +149,7 @@ export default function Relatorio() {
                             <Text style={styles.headerTitle}>Relatório</Text>
                         </View>
 
-                        {/* lista de remedios */}
+                        {/* lista de questionarios */}
                         <FlatList
                             data={questionarios}
                             keyExtractor={(item) => item.id}
