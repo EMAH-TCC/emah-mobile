@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { FlatList, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
 
 async function getUser() {
@@ -115,15 +115,17 @@ export default function MenuInicial() {
 
   const renderPacientes = ({ item }) => (
     <View style={styles.card}>
-      <Text style={styles.cardText}>{(item.nome_paciente)}</Text>
+      <TouchableOpacity>
+        <Text style={styles.cardText}>{item.nome_paciente}</Text>
+      </TouchableOpacity>
 
-      {/* Botão de opções */}
+      {/* Botão de opções 
       <TouchableOpacity
         style={styles.optionsButton}
         onPress={(e) => abrirMenu(item, e)}
       >
         <Ionicons name="ellipsis-vertical" size={20} color="#321904" />
-      </TouchableOpacity>
+      </TouchableOpacity>*/}
     </View>
   );
   return (
@@ -159,21 +161,21 @@ export default function MenuInicial() {
             scrollEnabled={false}
           />
 
-          {/* menu suspenso */}
+          {/* menu suspenso
           <Modal
             transparent={true}
             visible={modalVisible}
             animationType="fade"
             onRequestClose={fecharMenu}
           >
-            <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={fecharMenu}>
+            /*<TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={fecharMenu}>
               <View style={[styles.menuContainer, { top: menuPosition.top, right: menuPosition.right }]}>
                 <TouchableOpacity style={styles.menuItem} onPress={removerPaciente}>
                   <Text style={styles.menuText}>Remover paciente</Text>
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>
-          </Modal>
+          </Modal>*/}
         </ScrollView>
       </View>
     </SafeAreaView>

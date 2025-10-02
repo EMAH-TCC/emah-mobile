@@ -5,7 +5,7 @@ export default function IdosoAdicionado() {
   const router = useRouter();
   const params = useLocalSearchParams();
 
-  const nomeIdoso = params.nome_paciente
+  const nomeIdoso = params.nome;
   console.log(nomeIdoso)
 
   return (
@@ -23,7 +23,6 @@ export default function IdosoAdicionado() {
           )}
           <Text style={styles.imageLabel}>Foto de perfil do idoso</Text>
         </View>
-
         {/* Texto do meio */}
         <View style={styles.content}>
           <Text style={styles.infoText}>
@@ -35,14 +34,14 @@ export default function IdosoAdicionado() {
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.button, styles.primaryButton]}
-            onPress={() => router.push('/menuInicial')}
+            onPress={() => router.push('/cuidador/menuInicial')}
           >
             <Text style={styles.buttonText}>Sair</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.secondaryButton]}
-            onPress={() => router.push('/inserirCodigoIdoso')}
+            onPress={() => router.push('/cuidador/inserirCodigoIdoso')}
           >
             <Text style={styles.buttonText}>Adicionar mais um idoso</Text>
           </TouchableOpacity>

@@ -87,13 +87,20 @@ function MainLayout() {
             <Stack.Screen name="idoso/remedios" options={{ headerShown: false }} />
             <Stack.Screen name="idoso/bpm" options={{ headerShown: false }} />
             <Stack.Screen name="idoso/formulario" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/relatorio" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/adicionarRemedio" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/removerRemedio" options={{ headerShown: false }} />
 
             {/* Rotas cuidador */}
             <Stack.Screen name="cuidador/menuInicial" options={{ headerShown: false }} />
             <Stack.Screen name="cuidador/erroAdicionarIdoso" options={{ headerShown: false }} />
             <Stack.Screen name="cuidador/idosoAdicionado" options={{ headerShown: false }} />
             <Stack.Screen name="cuidador/inserirCodigoIdoso" options={{ headerShown: false }} />
-            <Stack.Screen name="cuidador/perfil" options={{ headerShown: false }} />
+            <Stack.Screen name="cuidador/perfil" options={{ headerShown: false }}
+            />
+            <Stack.Screen name="cuidador/menuIdosoParaCuidador" options={{ headerShown: false }} />
+            <Stack.Screen name="cuidador/removerPaciente" options={{ headerShown: false }} />
+            <Stack.Screen name="cuidador/confirmacaoIdoso" options={{ headerShown: false }} />
         </Stack>
     )
 }

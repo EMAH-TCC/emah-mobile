@@ -81,7 +81,7 @@ export default function Relatorio() {
     const removerRemedio = () => {
         if (selectedRemedio) {
             router.push({
-                pathname: '/removerRemedio',
+                pathname: '/idoso/removerRemedio',
                 params: selectedRemedio,
             });
             fecharMenu();
@@ -91,7 +91,7 @@ export default function Relatorio() {
     const alterarDados = () => {
         if (selectedRemedio) {
             router.push({
-                pathname: '/editarRemedio',
+                pathname: '/idoso/editarRemedio',
                 params: selectedRemedio,
             });
             fecharMenu();
@@ -119,14 +119,6 @@ export default function Relatorio() {
             <Text style={styles.cardTextPressao}>{item.pressao_diastolica}</Text>
             <Text style={styles.cardText}>Remédios: {formatarRemedios(item.remedios)}</Text>
             <Text style={styles.cardText}>Notas: {item.notas}</Text>
-
-            {/* Botão de opções */}
-            <TouchableOpacity
-                style={styles.optionsButton}
-                onPress={(e) => abrirMenu(item, e)}
-            >
-                <Ionicons name="ellipsis-vertical" size={20} color="#321904" />
-            </TouchableOpacity>
         </View>
     );
 
@@ -163,7 +155,7 @@ export default function Relatorio() {
                 </ScrollView>
 
                 {/* Botão da tela inicial */}
-                <TouchableOpacity style={styles.homeButton} onPress={() => router.push('/menuInicial')}>
+                <TouchableOpacity style={styles.homeButton} onPress={() => router.push('/idoso/menuInicial')}>
                     <Ionicons name="home-outline" size={28} color="#321904" />
                 </TouchableOpacity>
 

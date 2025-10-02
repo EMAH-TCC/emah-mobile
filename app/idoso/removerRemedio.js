@@ -56,7 +56,7 @@ export default function RemoverRemedio() {
             return
         }
         const remedio = await deleteRemedio(idRemedio);
-        router.push('/remedios'); // volta para a lista
+        router.push('/idoso/remedios'); // volta para a lista
     }
 
     return (

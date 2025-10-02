@@ -35,14 +35,14 @@ export default function CuidadorAdicionado({ route }) {
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.button, styles.primaryButton]}
-            onPress={() => router.push('/menuInicial')}
+            onPress={() => router.push('/idoso/menuInicial')}
           >
             <Text style={styles.buttonText}>Sair</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.secondaryButton]}
-            onPress={() => router.push('/codigoDoIdoso')}
+            onPress={() => router.push('/idoso/codigoDoIdoso')}
           >
             <Text style={styles.buttonText}>Adicionar mais um cuidador</Text>
           </TouchableOpacity>

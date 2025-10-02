@@ -7,6 +7,13 @@ export default function AdicionarCuidador() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <View style={styles.backCircle}>
+            <Ionicons name="arrow-back" size={24} color="#321904" />
+          </View>
+        </TouchableOpacity>
+      </View>
       <View style={styles.container}>
 
         {/* Ícone */}
@@ -28,7 +35,7 @@ export default function AdicionarCuidador() {
 
           <TouchableOpacity
             style={[styles.button, styles.secondaryButton]}
-            onPress={() => router.push('/menuInicial')} //tela inicial (menu) do aplicativo
+            onPress={() => router.push('/idoso/menuInicial')} //tela inicial (menu) do aplicativo
           >
             <Text style={styles.buttonText}>Não</Text>
           </TouchableOpacity>
@@ -94,5 +101,25 @@ const styles = StyleSheet.create({
     color: '#321904',
     fontSize: 14,
     textAlign: 'center',
+  },
+  backButton: {
+    position: 'absolute',
+    left: 25,
+    top: 30,
+  },
+  backCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#321904',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  header: {
+    height: 60,
+    justifyContent: 'center',
+    marginBottom: 20,
+    position: 'relative',
   },
 });

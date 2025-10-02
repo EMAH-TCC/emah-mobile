@@ -82,7 +82,7 @@ export default function AdicionarRemedio() {
         }
         const remedio = await addRemedio(pacienteId, nome, frequencia, dose, horarios);
         console.log("Remédio adicionado: ", remedio);
-        router.push('/remedios'); // volta para a lista
+        router.push('/idoso/remedios'); // volta para a lista
 
     }
 

@@ -55,7 +55,6 @@ export default function ConfirmacaoIdoso() {
     const nome_paciente = params.nome_paciente
     const id_paciente = params.id_paciente
 
-    console.log(nome_paciente);
     const [codigo, setCodigo] = useState('');
     const [erro, setErro] = useState(false);
     const idPaciente = Number(id_paciente);
@@ -75,14 +74,14 @@ export default function ConfirmacaoIdoso() {
             console.log('A conexão não foi bem-sucedida');
             router.push({
                 pathname: '/cuidador/erroAdicionarIdoso',
-                params: nome_paciente,
+                params: { nome: nome_paciente },
             });
         }
         else {
             console.log(conexaoPacienteCuidador);
             router.push({
                 pathname: '/cuidador/idosoAdicionado',
-                params: nome_paciente,
+                params: { nome: nome_paciente },
             });
         }
     }

@@ -28,14 +28,14 @@ export default function ErroAdicionarIdoso({ route }) {
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.button, styles.primaryButton]}
-            onPress={() => router.push('/menuInicial')}
+            onPress={() => router.push('/cuidador/menuInicial')}
           >
             <Text style={styles.buttonText}>Sair</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.secondaryButton]}
-            onPress={() => router.push('/inserirCodigoIdoso')}
+            onPress={() => router.push('/cuidador/inserirCodigoIdoso')}
           >
             <Text style={styles.buttonText}>Tentar novamente</Text>
           </TouchableOpacity>

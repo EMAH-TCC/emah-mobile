@@ -106,7 +106,7 @@ export default function Formulario() {
     }
     const dataInsercao = new Date();
     const questionario = await addQuestionario(pacienteId, temperatura, peso, pressaoSistolica, pressaoDiastolica, remedios, notas, dataInsercao);
-    router.push('/menuInicial');
+    router.push('/idoso/menuInicial');
   }
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -254,7 +254,7 @@ export default function Formulario() {
         </ScrollView>
 
         {/* Botão Home */}
-        <TouchableOpacity style={styles.homeButton} onPress={() => router.push('/menuInicial')}>
+        <TouchableOpacity style={styles.homeButton} onPress={() => router.push('/idoso/menuInicial')}>
           <Ionicons name="home-outline" size={28} color="#321904" />
         </TouchableOpacity>
       </KeyboardAvoidingView>

@@ -81,7 +81,7 @@ export default function Remedios() {
   const removerRemedio = () => {
     if (selectedRemedio) {
       router.push({
-        pathname: '/removerRemedio',
+        pathname: '/idoso/removerRemedio',
         params: selectedRemedio,
       });
       fecharMenu();
@@ -91,7 +91,7 @@ export default function Remedios() {
   const alterarDados = () => {
     if (selectedRemedio) {
       router.push({
-        pathname: '/editarRemedio',
+        pathname: '/idoso/editarRemedio',
         params: selectedRemedio,
       });
       fecharMenu();
@@ -142,7 +142,7 @@ export default function Remedios() {
             {/* botão para adicionar remedio */}
             <TouchableOpacity
               style={styles.addButton}
-              onPress={() => router.push('/adicionarRemedio')} // navegação para a nova tela
+              onPress={() => router.push('/idoso/adicionarRemedio')} // navegação para a nova tela
             >
               <Ionicons name="add-circle-outline" size={20} color="#321904" style={{ marginRight: 8 }} />
               <Text style={styles.addButtonText}>Adicionar remédio</Text>
@@ -151,7 +151,7 @@ export default function Remedios() {
         </ScrollView>
 
         {/* Botão da tela inicial */}
-        <TouchableOpacity style={styles.homeButton} onPress={() => router.push('/menuInicial')}>
+        <TouchableOpacity style={styles.homeButton} onPress={() => router.push('/idoso/menuInicial')}>
           <Ionicons name="home-outline" size={28} color="#321904" />
         </TouchableOpacity>
 

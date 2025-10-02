@@ -65,7 +65,7 @@ export default function MenuInicial() {
                 {/* Cabeçalho */}
                 <View style={styles.header}>
                     <Text style={styles.greetingText}>Olá, {nomeUser}!</Text>
-                    <TouchableOpacity onPress={() => router.push('/perfil')}>
+                    <TouchableOpacity onPress={() => router.push('/cuidador/perfil')}>
                         <Ionicons name="person-outline" size={28} color="#321904" />
                     </TouchableOpacity>
                 </View>

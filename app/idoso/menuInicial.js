@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   greetingText: { fontSize: 20, color: '#321904', fontWeight: 'bold' },
 
   topBox: {
-    height: '43%',
+    height: '37%',
     backgroundColor: '#F28B0C',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,

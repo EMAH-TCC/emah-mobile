@@ -83,7 +83,7 @@ export default function EditarRemedio() {
       return
     }
     const remedio = await updateRemedio(idRemedio, pacienteId, nome, frequencia, dose, horarios);
-    router.push('/remedios'); // volta para a lista
+    router.push('/idoso/remedios'); // volta para a lista
   }
 
   return (
