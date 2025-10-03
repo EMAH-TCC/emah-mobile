@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
@@ -13,17 +13,6 @@ async function getUser() {
   }
 
   return data.user;
-}
-
-async function getUserId(userId) {
-  const { data, error } = await supabase.from('paciente').select('id').eq('id_user', userId).single()
-
-  if (error) {
-    console.log("Erro busca: ", error);
-    return null;
-  }
-
-  return data.id
 }
 
 async function addQuestionario(pacienteId, temperatura, peso, pressaoSistolica, pressaoDiastolica, remedios, notas, dataInsercao) {
@@ -41,6 +30,10 @@ async function addQuestionario(pacienteId, temperatura, peso, pressaoSistolica, 
 }
 export default function Formulario() {
   const router = useRouter();
+  const params = useLocalSearchParams();
+
+  const idPaciente = params.id;
+  const id_paciente = Number(idPaciente);
 
   //estados interativos
   const [sintomasSelecionados, setSintomasSelecionados] = useState({});
@@ -100,10 +93,6 @@ export default function Formulario() {
       return
     }
 
-    const pacienteId = await getUserId(user.id);
-    if (!pacienteId) {
-      return
-    }
     const dataInsercao = new Date();
     const questionario = await addQuestionario(pacienteId, temperatura, peso, pressaoSistolica, pressaoDiastolica, remedios, notas, dataInsercao);
     router.push('/idoso/menuInicial');

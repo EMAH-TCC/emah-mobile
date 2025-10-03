@@ -14,17 +14,6 @@ async function getUser() {
     return data.user;
 }
 
-async function getUserId(userId) {
-    const { data, error } = await supabase.from('paciente').select('id').eq('id_user', userId).single()
-
-    if (error) {
-        console.log("Erro busca: ", error);
-        return null;
-    }
-
-    return data.id
-}
-
 async function deleteRemedio(idRemedio) {
     const { data, error } = await supabase
         .from('medicamento')
@@ -43,20 +32,27 @@ export default function RemoverRemedio() {
     const router = useRouter();
     const params = useLocalSearchParams();
 
-    const idRemedio = Number(params.id);
+    const idRemedio = Number(params.idRemedio);
+    const idPaciente = params.idPaciente;
+    const id_paciente = Number(idPaciente);
 
     async function removerRemedioNoBanco() {
+
         const user = await getUser();
         if (!user) {
             return
         }
 
-        const pacienteId = await getUserId(user.id)
+        const pacienteId = id_paciente;
         if (!pacienteId) {
             return
         }
         const remedio = await deleteRemedio(idRemedio);
-        router.push('/idoso/remedios'); // volta para a lista
+
+        router.push({
+            pathname: '/idoso/remedios',
+            params: { id: pacienteId },
+        }); // volta para a lista
     }
 
     return (

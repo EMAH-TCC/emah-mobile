@@ -115,7 +115,10 @@ export default function MenuInicial() {
 
   const renderPacientes = ({ item }) => (
     <View style={styles.card}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => router.push({
+        pathname: '/idoso/menuInicial',
+        params: { id: item.id_paciente, nome: item.nome_paciente },
+      })}>
         <Text style={styles.cardText}>{item.nome_paciente}</Text>
       </TouchableOpacity>
 
@@ -126,7 +129,7 @@ export default function MenuInicial() {
       >
         <Ionicons name="ellipsis-vertical" size={20} color="#321904" />
       </TouchableOpacity>*/}
-    </View>
+    </View >
   );
   return (
     <SafeAreaView style={styles.safeArea}>

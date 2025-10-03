@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
@@ -13,17 +13,6 @@ async function getUser() {
   }
 
   return data.user;
-}
-
-async function getUserId(userId) {
-  const { data, error } = await supabase.from('paciente').select('id').eq('id_user', userId).single()
-
-  if (error) {
-    console.log("Erro busca: ", error);
-    return null;
-  }
-
-  return data.id
 }
 
 async function selectRemedios(pacienteId) {
@@ -42,7 +31,10 @@ async function selectRemedios(pacienteId) {
 
 export default function Remedios() {
   const router = useRouter();
+  const params = useLocalSearchParams();
 
+  const idPaciente = params.id;
+  const id_paciente = Number(idPaciente);
   const [remedios, setRemedios] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedRemedio, setSelectedRemedio] = useState(null);
@@ -54,7 +46,7 @@ export default function Remedios() {
       if (!user) {
         return
       }
-      const pacienteId = await getUserId(user.id)
+      const pacienteId = id_paciente;
       if (!pacienteId) {
         return
       }
@@ -82,7 +74,7 @@ export default function Remedios() {
     if (selectedRemedio) {
       router.push({
         pathname: '/idoso/removerRemedio',
-        params: selectedRemedio,
+        params: { idRemedio: selectedRemedio.id, idPaciente: id_paciente },
       });
       fecharMenu();
     }
@@ -92,7 +84,7 @@ export default function Remedios() {
     if (selectedRemedio) {
       router.push({
         pathname: '/idoso/editarRemedio',
-        params: selectedRemedio,
+        params: selectedRemedio, id: id_paciente,
       });
       fecharMenu();
     }
@@ -142,7 +134,10 @@ export default function Remedios() {
             {/* botão para adicionar remedio */}
             <TouchableOpacity
               style={styles.addButton}
-              onPress={() => router.push('/idoso/adicionarRemedio')} // navegação para a nova tela
+              onPress={() => router.push({
+                pathname: '/idoso/adicionarRemedio',
+                params: { id: id_paciente },
+              })} // navegação para a nova tela
             >
               <Ionicons name="add-circle-outline" size={20} color="#321904" style={{ marginRight: 8 }} />
               <Text style={styles.addButtonText}>Adicionar remédio</Text>
@@ -151,7 +146,12 @@ export default function Remedios() {
         </ScrollView>
 
         {/* Botão da tela inicial */}
-        <TouchableOpacity style={styles.homeButton} onPress={() => router.push('/idoso/menuInicial')}>
+        <TouchableOpacity style={styles.homeButton} onPress={() => router.replace(
+          {
+            pathname: '/idoso/menuInicial',
+            params: { id: params.id },
+          }
+        )}>
           <Ionicons name="home-outline" size={28} color="#321904" />
         </TouchableOpacity>
 

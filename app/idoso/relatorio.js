@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
@@ -42,7 +42,10 @@ async function selectQuestionario(pacienteId) {
 
 export default function Relatorio() {
     const router = useRouter();
+    const params = useLocalSearchParams();
 
+    const idPaciente = params.id;
+    const id_paciente = Number(idPaciente);
     const [questionarios, setQuestionarios] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedRemedio, setSelectedRemedio] = useState(null);
@@ -54,7 +57,7 @@ export default function Relatorio() {
             if (!user) {
                 return
             }
-            const pacienteId = await getUserId(user.id)
+            const pacienteId = id_paciente;
             if (!pacienteId) {
                 return
             }
@@ -155,7 +158,12 @@ export default function Relatorio() {
                 </ScrollView>
 
                 {/* Botão da tela inicial */}
-                <TouchableOpacity style={styles.homeButton} onPress={() => router.push('/idoso/menuInicial')}>
+                <TouchableOpacity style={styles.homeButton} onPress={() => router.replace(
+                    {
+                        pathname: '/idoso/menuInicial',
+                        params: { id: params.id },
+                    }
+                )}>
                     <Ionicons name="home-outline" size={28} color="#321904" />
                 </TouchableOpacity>
 

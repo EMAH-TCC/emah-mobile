@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
@@ -42,6 +42,9 @@ async function selectNomeUser(pacienteId) {
 export default function MenuInicial() {
   const router = useRouter();
   const [nomeUser, setNomeUser] = useState([]);
+  const params = useLocalSearchParams();
+  const [tipo_usuario, setTipoUsuario] = useState(null);
+  const [paciente_id, setPaciente_Id] = useState(null);
 
   useEffect(() => {
     async function carregarNomeUser() {
@@ -49,7 +52,17 @@ export default function MenuInicial() {
       if (!user) {
         return
       }
-      const pacienteId = await getUserId(user.id)
+
+      const idPacienteParam = params.id;
+
+      let pacienteId = null;
+
+      if (idPacienteParam) {
+        pacienteId = Number(idPacienteParam);
+      } else {
+        pacienteId = await getUserId(user.id);
+      }
+      setPaciente_Id(pacienteId);
       if (!pacienteId) {
         return
       }
@@ -59,16 +72,41 @@ export default function MenuInicial() {
     carregarNomeUser();
   }, []);
 
+  useEffect(() => {
+    async function getTipoUser() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data, error } = await supabase.from("usuarios").select("tipo_usuario").eq("id_user", session.user.id).single();
+        if (data) {
+          setTipoUsuario(data.tipo_usuario);
+          if (data.tipo_usuario === "paciente") {
+            tipo_usuario = "paciente";
+          } else if (data.tipo_usuario === "cuidador") {
+            tipo_usuario = "cuidador";
+          }
+        }
+      }
+    }
+    getTipoUser();
+  }, []);
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Cabeçalho */}
         <View style={styles.header}>
-          <Text style={styles.greetingText}>Olá, {nomeUser}!</Text>
+          {tipo_usuario === "cuidador" && (
+            <Text style={styles.greetingText}>Menu do paciente: {nomeUser}</Text>
+          )}
+
+          {tipo_usuario === "paciente" && (
+            <Text style={styles.greetingText}>Olá, {nomeUser}!</Text>
+          )}
+
           <TouchableOpacity onPress={() => router.push('/idoso/perfil')}>
             <Ionicons name="person-outline" size={28} color="#321904" />
           </TouchableOpacity>
         </View>
+
 
         {/* Parte laranja */}
         <View style={styles.topBox}></View>
@@ -76,35 +114,64 @@ export default function MenuInicial() {
         {/* Parte inferior dos botões */}
         <ScrollView contentContainerStyle={styles.bottomBox}>
           <View style={styles.grid}>
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/idoso/formulario')}>
-              <Ionicons name="clipboard-outline" size={38} color="#321904" />
-              <Text style={styles.menuText}>Formulário</Text>
-            </TouchableOpacity>
+            {tipo_usuario === "paciente" && (
+              <TouchableOpacity style={styles.menuButton} onPress={() => router.push(
+                {
+                  pathname: '/idoso/formulario',
+                  params: { id: paciente_id },
+                }
+              )}>
+                <Ionicons name="clipboard-outline" size={38} color="#321904" />
+                <Text style={styles.menuText}>Formulário</Text>
+              </TouchableOpacity>
+            )}
 
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/idoso/remedios')}>
+            <TouchableOpacity style={styles.menuButton} onPress={() => router.push({
+              pathname: '/idoso/remedios',
+              params: { id: paciente_id },
+            })}>
               <Ionicons name="medkit-outline" size={38} color="#321904" />
               <Text style={styles.menuText}>Remédios</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/idoso/relatorio')}>
+            <TouchableOpacity style={styles.menuButton} onPress={() => router.push(
+              {
+                pathname: '/idoso/relatorio',
+                params: { id: paciente_id },
+              }
+            )}>
               <Ionicons name="heart-outline" size={38} color="#321904" />
               <Text style={styles.menuText}>Relatório</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/idoso/agenda')}>
+            <TouchableOpacity style={styles.menuButton} onPress={() => router.push({
+              pathname: '/idoso/agenda',
+              params: { id: paciente_id },
+            })}>
               <Ionicons name="calendar-outline" size={38} color="#321904" />
               <Text style={styles.menuText}>Agenda</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/idoso/bpm')}>
+            <TouchableOpacity style={styles.menuButton} onPress={() => router.push({
+              pathname: '/idoso/bpm',
+              params: { id: paciente_id },
+            })}>
               <Ionicons name="heart-circle" size={38} color="#321904" />
               <Text style={styles.menuText}>Batimentos</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/idoso/adicionarCuidador')}>
-              <Ionicons name="person" size={38} color="#321904" />
-              <Text style={styles.menuText}>Cuidadores</Text>
-            </TouchableOpacity>
+            {tipo_usuario === "paciente" && (
+              <TouchableOpacity style={styles.menuButton} onPress={() => router.push(
+                {
+                  pathname: '/idoso/adicionarCuidador',
+                  params: { id: paciente_id },
+                }
+              )}>
+                <Ionicons name="person" size={38} color="#321904" />
+                <Text style={styles.menuText}>Cuidadores</Text>
+              </TouchableOpacity>
+            )}
+
           </View>
         </ScrollView>
       </View>

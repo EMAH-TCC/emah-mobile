@@ -44,6 +44,8 @@ export default function AdicionarRemedio() {
     const router = useRouter();
     const params = useLocalSearchParams();
 
+    const idPaciente = params.id;
+    const id_paciente = Number(idPaciente);
     const [nome, setNome] = useState(params.nome || '');
     const [dose, setDose] = useState(params.dose || '');
     const [frequencia, setFrequencia] = useState(null);
@@ -76,16 +78,18 @@ export default function AdicionarRemedio() {
             return
         }
 
-        const pacienteId = await getUserId(user.id)
+        const pacienteId = id_paciente;
         if (!pacienteId) {
             return
         }
         const remedio = await addRemedio(pacienteId, nome, frequencia, dose, horarios);
         console.log("Remédio adicionado: ", remedio);
-        router.push('/idoso/remedios'); // volta para a lista
+        router.push({
+            pathname: '/idoso/remedios',
+            params: { id: pacienteId },
+        });
 
     }
-
     return (
         <SafeAreaView style={styles.safeArea}>
             <KeyboardAvoidingView
