@@ -152,13 +152,28 @@ export default function MenuInicial() {
               <Text style={styles.menuText}>Agenda</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.menuButton} onPress={() => router.push({
-              pathname: '/idoso/bpm',
-              params: { id: paciente_id },
-            })}>
-              <Ionicons name="heart-circle" size={38} color="#321904" />
-              <Text style={styles.menuText}>Batimentos</Text>
-            </TouchableOpacity>
+            {/*Batimentos para cuidador*/}
+            {tipo_usuario === "cuidador" && (
+              <TouchableOpacity style={styles.menuButton} onPress={() => router.push(
+                {
+                  pathname: '/cuidador/visualizarBpm',
+                  params: { id: paciente_id },
+                }
+              )}>
+                <Ionicons name="heart-circle" size={38} color="#321904" />
+                <Text style={styles.menuText}>Batimentos</Text>
+              </TouchableOpacity>
+            )}
+            {/*Batimentos para paciente*/}
+            {tipo_usuario === "paciente" && (
+              <TouchableOpacity style={styles.menuButton} onPress={() => router.push({
+                pathname: '/idoso/bpm',
+                params: { id: paciente_id },
+              })}>
+                <Ionicons name="heart-circle" size={38} color="#321904" />
+                <Text style={styles.menuText}>Batimentos</Text>
+              </TouchableOpacity>
+            )}
 
             {tipo_usuario === "paciente" && (
               <TouchableOpacity style={styles.menuButton} onPress={() => router.push(

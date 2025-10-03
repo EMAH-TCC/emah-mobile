@@ -39,9 +39,77 @@ async function leBPMemSegundoPlano() {
     return records;
 }
 
+import { supabase } from '../../utils/supabase';
+
+async function getUser() {
+    const { data, error } = await supabase.auth.getUser();
+
+    if (error) {
+        console.log("Erro: ", error);
+        return null;
+    }
+
+    return data.user;
+}
+
+async function getUserId(userId) {
+    const { data, error } = await supabase.from('paciente').select('id').eq('id_user', userId).single()
+
+    if (error) {
+        console.log("Erro busca: ", error);
+        return null;
+    }
+
+    return data.id
+}
+
+async function addBPM(pacienteId, bpm) {
+    const { data, error } = await supabase
+        .from('frequencia_cardiaca')
+        .insert([{ id_paciente: pacienteId, bpm: bpm }])
+        .select()
+
+    if (error) {
+        console.error("Erro ao inserir batimento cardíaco:", error)
+        return null
+    }
+
+    return data
+}
+
+async function salvarBatimentoNoBanco(pacienteId, bpm) {
+    console.log(pacienteId)
+    if (!pacienteId || !bpm) {
+        return;
+    }
+    try {
+        await addBPM(pacienteId, bpm);
+        console.log("Batimento adicionado:", bpm);
+    } catch (error) {
+        console.log("Erro ao salvar batimento:", error);
+    }
+
+}
 export default function Bpm() {
     const [bpm, setBpm] = useState(null);
     const [time, setTime] = useState(null);
+    const [pacienteId, setPacienteId] = useState(null);
+
+    useEffect(() => {
+        async function carregarUser() {
+            const user = await getUser();
+            if (!user) {
+                return
+            }
+            const pacienteId = await getUserId(user.id);
+
+            setPacienteId(pacienteId);
+            if (!pacienteId) {
+                return
+            }
+        }
+        carregarUser();
+    }, []);
 
     const coletaUltimoBpm = async () => {
         try {
@@ -52,6 +120,8 @@ export default function Bpm() {
                     const ultimoSample = ultimoRegistro.samples[ultimoRegistro.samples.length - 1];
                     setBpm(ultimoSample.beatsPerMinute);
                     setTime(new Date(ultimoSample.time));
+                    console.log("Coleta")
+                    salvarBatimentoNoBanco(pacienteId, bpm)
                 }
             }
         } catch (error) {
@@ -67,7 +137,7 @@ export default function Bpm() {
             await coletaUltimoBpm();
         };
         init();
-    }, []);
+    }, [pacienteId]);
 
     const formatDate = (date) => date ? date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '--/--/----';
     const formatTime = (date) => date ? date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '--:--';

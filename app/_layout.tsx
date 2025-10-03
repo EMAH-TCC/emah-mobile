@@ -101,6 +101,7 @@ function MainLayout() {
             <Stack.Screen name="cuidador/menuIdosoParaCuidador" options={{ headerShown: false }} />
             <Stack.Screen name="cuidador/removerPaciente" options={{ headerShown: false }} />
             <Stack.Screen name="cuidador/confirmacaoIdoso" options={{ headerShown: false }} />
+            <Stack.Screen name="cuidador/visualizarBpm" options={{ headerShown: false }} />
         </Stack>
     )
 }
