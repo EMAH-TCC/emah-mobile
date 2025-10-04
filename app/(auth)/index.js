@@ -12,7 +12,7 @@ export default function Home() {
         <View style={styles.contentContainer}>
           {/* Imagem */}
           <Image
-            source={require('../../assets/images/emah-image.png')}
+            source={require('../../assets/images/emah_abraco.png')}
             style={styles.image}
             resizeMode="contain"
           />
