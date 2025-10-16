@@ -19,7 +19,7 @@ async function selectRemedios(pacienteId) {
   const { data, error } = await supabase
     .from('medicamento')
     .select('id, nome')
-    .eq('id_paciente', pacienteId)
+    .eq('id_paciente', pacienteId);
 
   if (error) {
     console.error("Erro ao inserir consulta:", error)
@@ -137,7 +137,7 @@ export default function Remedios() {
               onPress={() => router.push({
                 pathname: '/idoso/adicionarRemedio',
                 params: { id: id_paciente },
-              })} // navegação para a nova tela
+              })}
             >
               <Ionicons name="add-circle-outline" size={20} color="#321904" style={{ marginRight: 8 }} />
               <Text style={styles.addButtonText}>Adicionar remédio</Text>

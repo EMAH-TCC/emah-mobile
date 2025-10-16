@@ -9,7 +9,10 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+        "infoPlist": {
+        "NSCalendarsUsageDescription": "O aplicativo necessita do acesso ao seu calendário para criar e gerenciar eventos."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -44,6 +47,13 @@
             "targetSdkVersion": 34,
             "minSdkVersion": 26
           }
+        }
+      ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "Permita que o nosso app acesse seu calendário para criar eventos.",
+          "remindersPermission": "Permita que o nosso app acesse seus lembretes." 
         }
       ]
     ],

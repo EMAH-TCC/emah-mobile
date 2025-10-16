@@ -90,6 +90,8 @@ function MainLayout() {
             <Stack.Screen name="idoso/relatorio" options={{ headerShown: false }} />
             <Stack.Screen name="idoso/adicionarRemedio" options={{ headerShown: false }} />
             <Stack.Screen name="idoso/removerRemedio" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/agenda" options={{headerShown: false}}/>
+            <Stack.Screen name="idoso/adicionarAgendamento" options={{headerShown: false}}/>
 
             {/* Rotas cuidador */}
             <Stack.Screen name="cuidador/menuInicial" options={{ headerShown: false }} />
