@@ -178,7 +178,7 @@ export default function MenuInicial() {
             {tipo_usuario === "paciente" && (
               <TouchableOpacity style={styles.menuButton} onPress={() => router.push(
                 {
-                  pathname: '/idoso/adicionarCuidador',
+                  pathname: '/idoso/listarCuidadores',
                   params: { id: paciente_id },
                 }
               )}>

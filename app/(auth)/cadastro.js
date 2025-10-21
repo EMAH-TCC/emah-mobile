@@ -210,9 +210,9 @@ export default function Cadastro() {
     setPasswordMismatch(false);
 
     if (role === 'idoso') {
-      router.push('/adicionarCuidador'); //nomes provisorios enquanto as telas não foram criadas
+      router.push('/idoso/menuInicial'); //nomes provisorios enquanto as telas não foram criadas
     } else {
-      router.push('/inserirCodigoIdoso');
+      router.push('/cuidador/menuInicial');
     }
 
     signUpEmail();
