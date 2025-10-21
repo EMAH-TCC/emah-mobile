@@ -2,44 +2,52 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
   View,
+  Alert,
 } from "react-native";
 import { supabase } from "../../utils/supabase";
 
 async function getUser() {
   const { data, error } = await supabase.auth.getUser();
-
   if (error || !data?.user) {
     console.log("Erro ao obter usuário:", error);
     return null;
   }
-
   return data.user;
 }
 
-async function addAgendamento(id_paciente, nome, descricao, data_evento) {
+// 🔹 Inserir agendamento
+async function addAgendamento(
+  id_paciente,
+  nome_evento,
+  descricao,
+  data_evento,
+  horarios
+) {
   const { data, error } = await supabase
     .from("agendamento")
     .insert([
       {
-        id: id_paciente,
-        nome_evento: nome,
-        data_evento: data_evento,
+        id_paciente: id_paciente,
+        nome_evento: nome_evento,
         descricao: descricao,
+        data_evento: data_evento,
+        horarios: horarios, // campo JSONB no banco
       },
     ])
     .select();
 
   if (error) {
-    console.error("Erro ao inserir consulta:", error);
+    console.error("Erro ao inserir agendamento:", error);
+    Alert.alert("Erro", "Não foi possível salvar o agendamento.");
     return null;
   }
 
@@ -49,60 +57,88 @@ async function addAgendamento(id_paciente, nome, descricao, data_evento) {
 export default function AdicionarAgendamento() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const idPaciente = Number(params.id);
 
-  const idPaciente = params.id;
-  const id_paciente = Number(idPaciente);
-  console.log("Id: ", id_paciente);
-  const [nome_evento, setNome] = useState(params.nome_evento || "");
-  const [descricao, setDescricao] = useState(params.descricao || "");
-  const [data_evento, setData] = useState("");
-  const [errorFields, setErrorFields] = useState([]);
-  const [horarioInicio, setHoararioInicio] = useState("");
+  const [nomeEvento, setNomeEvento] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [dataEvento, setDataEvento] = useState("");
+  const [horarioInicio, setHorarioInicio] = useState("");
   const [horarioFim, setHorarioFim] = useState("");
 
-  async function salvarAgendamentos() {
+  function isValidDateBR(dateStr) {
+    const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+    if (!regex.test(dateStr)) return false;
+    const [day, month, year] = dateStr.split("/").map(Number);
+    const date = new Date(year, month - 1, day);
+    return (
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day
+    );
+  }
+
+  function parseDateBR(dateStr) {
+    const [day, month, year] = dateStr.split("/");
+    return `${year}-${month}-${day}`; // formato ISO para o Supabase
+  }
+
+  function isValidTime(timeStr) {
+    const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+    return regex.test(timeStr);
+  }
+
+  async function salvarAgendamento() {
     const user = await getUser();
     if (!user) return;
 
-    const pacienteId = id_paciente;
-    if (!pacienteId) {
+    // Validação dos campos
+    if (!nomeEvento.trim()) {
+      Alert.alert("Erro", "Preencha o nome do evento.");
+      return;
+    }
+    if (!descricao.trim()) {
+      Alert.alert("Erro", "Preencha a descrição do evento.");
+      return;
+    }
+    if (!dataEvento.trim() || !isValidDateBR(dataEvento.trim())) {
+      Alert.alert("Erro", "Informe uma data válida no formato DD/MM/AAAA.");
+      return;
+    }
+    if (!horarioInicio.trim() || !isValidTime(horarioInicio.trim())) {
+      Alert.alert("Erro", "Informe um horário de início válido (HH:MM).");
+      return;
+    }
+    if (!horarioFim.trim() || !isValidTime(horarioFim.trim())) {
+      Alert.alert("Erro", "Informe um horário de término válido (HH:MM).");
+      return;
+    }
+    if (horarioInicio >= horarioFim) {
+      Alert.alert(
+        "Erro",
+        "O horário de início deve ser anterior ao horário de término."
+      );
       return;
     }
 
-    const [dia, mes, ano] = data_evento.split("/");
-    const dataFormatada = `${ano}-${mes}-${dia}`;
+    const horarios = {
+      inicio: horarioInicio.trim(),
+      fim: horarioFim.trim(),
+    };
 
-    const evento = await addAgendamento(
-      id_paciente,
-      nome_evento,
-      descricao,
-      dataFormatada
+    const dataISO = parseDateBR(dataEvento.trim());
+
+    const novoEvento = await addAgendamento(
+      idPaciente,
+      nomeEvento.trim(),
+      descricao.trim(),
+      dataISO,
+      horarios
     );
-    console.log("Evento adicionado: ", evento);
 
-    router.push({
-      pathname: "/idoso/agenda",
-      params: { id: user.id },
-    });
-  }
-
-  function formataData(text) {
-    let cleaned = text.replace(/\D/g, "");
-    if (cleaned.length <= 2) {
-      setData(cleaned);
-      return;
+    if (novoEvento) {
+      Alert.alert("Sucesso", "Agendamento salvo com sucesso!");
+      router.push(`/idoso/agenda?id=${idPaciente}`);
     }
-    if (cleaned.length <= 4) {
-      setData(cleaned.slice(0, 2) + "/" + cleaned.slice(2));
-      return;
-    }
-    setData(
-      cleaned.slice(0, 2) +
-        "/" +
-        cleaned.slice(2, 4) +
-        "/" +
-        cleaned.slice(4, 8)
-    );
   }
 
   return (
@@ -111,64 +147,54 @@ export default function AdicionarAgendamento() {
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <ScrollView style={styles.scrollContent}>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.container}>
-            {/* Cabeçalho com botão de voltar e título */}
-            <View style={styles.header}>
-              <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => router.back()}
-              >
-                <View style={styles.backCircle}>
-                  <Ionicons name="arrow-back" size={24} color="#321904" />
-                </View>
-              </TouchableOpacity>
-              <Text style={styles.headerTitle}>Adicionar Agendamento</Text>
-            </View>
+            <Text style={styles.label}>Nome do Evento</Text>
+            <TextInput
+              style={styles.input}
+              value={nomeEvento}
+              onChangeText={setNomeEvento}
+              placeholder="Ex: Consulta médica"
+            />
 
-            {/* Conteúdo principal */}
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-              <TextInput
-                style={styles.input}
-                placeholder="Nome do evento"
-                value={nome_evento}
-                onChangeText={setNome}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Descrição do evento"
-                value={descricao}
-                onChangeText={setDescricao}
-              />
-              <TextInput
-                placeholder="Data do evento (DD/MM/AAAA)"
-                placeholderTextColor={
-                  errorFields.includes("data_evento") ? "red" : "#321904"
-                }
-                keyboardType="numeric"
-                value={data_evento}
-                onChangeText={formataData}
-                style={styles.input}
-                maxLength={10}
-              />
+            <Text style={styles.label}>Descrição</Text>
+            <TextInput
+              style={styles.input}
+              value={descricao}
+              onChangeText={setDescricao}
+              placeholder="Ex: Avaliação de rotina"
+            />
 
-              {/* Botões de ação */}
-              <View style={styles.footer}>
-                <TouchableOpacity
-                  style={[styles.button, styles.primaryButton]}
-                  onPress={salvarAgendamentos}
-                >
-                  <Text style={styles.buttonText}>Salvar</Text>
-                </TouchableOpacity>
+            <Text style={styles.label}>Data do Evento (DD/MM/AAAA)</Text>
+            <TextInput
+              style={styles.input}
+              value={dataEvento}
+              onChangeText={setDataEvento}
+              placeholder="21/10/2025"
+            />
 
-                <TouchableOpacity
-                  style={[styles.button, styles.secondaryButton]}
-                  onPress={() => router.back()}
-                >
-                  <Text style={styles.buttonText}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
+            <Text style={styles.label}>Horário de Início</Text>
+            <TextInput
+              style={styles.input}
+              value={horarioInicio}
+              onChangeText={setHorarioInicio}
+              placeholder="08:00"
+            />
+
+            <Text style={styles.label}>Horário de Término</Text>
+            <TextInput
+              style={styles.input}
+              value={horarioFim}
+              onChangeText={setHorarioFim}
+              placeholder="09:00"
+            />
+
+            <TouchableOpacity
+              style={styles.botaoSalvar}
+              onPress={salvarAgendamento}
+            >
+              <Text style={styles.textoBotao}>Salvar</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -181,69 +207,44 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
+  scrollContent: {
+    padding: 17,
+  },
   container: {
     flex: 1,
     paddingHorizontal: 20,
     paddingVertical: 10,
     justifyContent: "flex-start",
   },
-  header: {
-    height: 60,
-    justifyContent: "center",
-    marginBottom: 10,
-    position: "relative",
-  },
-  backButton: {
-    position: "absolute",
-    left: 0,
-    top: 10,
-  },
-  backCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "#321904",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  headerTitle: {
-    fontSize: 20,
-    color: "#321904",
+  label: {
+    marginTop: 12,
     fontWeight: "bold",
-    textAlign: "center",
-    alignSelf: "center",
-  },
-  scrollContent: {
-    padding: 17,
+    color: "#321904",
+    fontSize: 15,
   },
   input: {
-    backgroundColor: "#EDE7F6",
+    backgroundColor: "#F7F4EF",
     padding: 14,
-    borderRadius: 6,
-    marginBottom: 16,
+    borderRadius: 8,
+    marginTop: 6,
+    marginBottom: 12,
     color: "#321904",
     fontSize: 16,
+    borderWidth: 1,
+    borderColor: "#E0D8C3",
   },
-  footer: {
-    paddingVertical: 20,
-    alignItems: "center",
-  },
-  button: {
-    paddingVertical: 14,
-    borderRadius: 6,
-    alignItems: "center",
-    marginBottom: 12,
-    width: "100%",
-    maxWidth: 300,
-  },
-  primaryButton: {
+  botaoSalvar: {
     backgroundColor: "#F28B0C",
+    padding: 14,
+    borderRadius: 10,
+    marginTop: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
-  secondaryButton: {
-    backgroundColor: "#FBB65A",
-  },
-  buttonText: {
+  textoBotao: {
     color: "#321904",
     fontWeight: "bold",
     fontSize: 16,

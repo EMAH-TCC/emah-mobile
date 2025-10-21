@@ -12,7 +12,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  FlatList,
 } from "react-native";
 import { Calendar as CalendarView } from "react-native-calendars";
 import { supabase } from "../../utils/supabase";
@@ -38,18 +37,11 @@ export default function Agenda() {
     const requestPermissionIfNeeded = async () => {
       const { status } = await Calendar.getCalendarPermissionsAsync();
 
-      console.log("Status inicial da permissão:", status);
-
       if (status === "undetermined") {
-        console.log("Status indeterminado. Solicitando permissão...");
         const { status: newStatus } =
           await Calendar.requestCalendarPermissionsAsync();
-        console.log("Novo status após a solicitação:", newStatus);
       } else if (status === "denied") {
-        console.log("Permissão negada anteriormente.");
         alertaFalhaNaPermissao();
-      } else {
-        console.log("Permissão já concedida.");
       }
     };
 
@@ -71,23 +63,30 @@ export default function Agenda() {
     else setEventos(eventosDoDia || []);
   }
 
-return (
+
+  const handleDayPress = (day) => {
+    setSelected(day.dateString);
+  };
+
+  return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView contentContainerStyle={styles.scroll}>
+          {/* Cabeçalho */}
           <View style={styles.header}>
             <Ionicons name="calendar-outline" size={24} color="#FF8C42" />
             <Text style={styles.headerTitle}>Agenda de Cuidados</Text>
           </View>
 
+          {/* Card do calendário */}
           <View style={styles.cardCalendario}>
             <Text style={styles.dataSelecionadaTitulo}>Data selecionada</Text>
             <Text style={styles.dataSelecionadaTexto}>
               {selected
-                ? new Date(selected).toLocaleDateString("pt-BR", {
+                ? new Date(selected + "T00:00:00").toLocaleDateString("pt-BR", {
                     weekday: "long",
                     day: "2-digit",
                     month: "long",
@@ -97,7 +96,7 @@ return (
             </Text>
 
             <CalendarView
-              onDayPress={(day) => setSelected(day.dateString)}
+              onDayPress={handleDayPress}
               markedDates={{
                 [selected]: {
                   selected: true,
@@ -105,56 +104,56 @@ return (
                   selectedColor: "#FF8C42",
                 },
               }}
+              monthFormat="MMMM yyyy"
+              firstDay={1}
               theme={{
+                backgroundColor: "#ffffff",
+                calendarBackground: "#ffffff",
+                textSectionTitleColor: "#321904",
                 selectedDayBackgroundColor: "#FF8C42",
                 todayTextColor: "#FF8C42",
                 arrowColor: "#FF8C42",
                 textMonthFontWeight: "bold",
+                textDayFontSize: 16,
+                textMonthFontSize: 18,
               }}
             />
           </View>
 
-          <View style={styles.buttonRow}>
-            <TouchableOpacity style={styles.botaoPrincipal}>
-              <Ionicons name="add-circle-outline" size={18} color="#fff" />
-              <Text style={styles.textoBotaoPrincipal}>Medicamento</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.botaoSecundario}>
-              <Ionicons name="calendar-outline" size={18} color="#FF8C42" />
-              <Text style={styles.textoBotaoSecundario}>Calendário</Text>
-            </TouchableOpacity>
-          </View>
-
+          {/* Agenda do dia */}
           <View style={styles.agendaDiaHeader}>
             <Ionicons name="calendar-outline" size={20} color="#FF8C42" />
             <Text style={styles.agendaDiaTitulo}>Agenda do Dia</Text>
           </View>
 
-          <FlatList
-            data={eventos}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.eventoCard}>
-                <View style={styles.eventoCabecalho}>
-                  <Text style={styles.horarioTexto}>{item.horario}</Text>
-                  <View style={styles.tagMedicamento}>
-                    <Text style={styles.tagTexto}>Medicamento</Text>
-                  </View>
-                  <TouchableOpacity>
-                    <Ionicons name="trash-outline" size={20} color="#cc3a3a" />
-                  </TouchableOpacity>
-                </View>
-                <Text style={styles.eventoTitulo}>{item.titulo}</Text>
-              </View>
-            )}
-            ListEmptyComponent={
+          <View style={styles.listaEventos}>
+            {eventos.length === 0 ? (
               <Text style={styles.semEventos}>
                 Nenhum evento para esta data.
               </Text>
-            }
-          />
+            ) : (
+              eventos.map((item) => (
+                <View key={item.id} style={styles.eventoCard}>
+                  <View style={styles.eventoCabecalho}>
+                    <Text style={styles.horarioTexto}>{item.horario}</Text>
+                    <View style={styles.tagMedicamento}>
+                      <Text style={styles.tagTexto}>Medicamento</Text>
+                    </View>
+                    <TouchableOpacity>
+                      <Ionicons
+                        name="trash-outline"
+                        size={20}
+                        color="#cc3a3a"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <Text style={styles.eventoTitulo}>{item.titulo}</Text>
+                </View>
+              ))
+            )}
+          </View>
 
+          {/* Botão flutuante */}
           <TouchableOpacity
             style={styles.botaoAdicionar}
             onPress={() =>
@@ -174,7 +173,7 @@ return (
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#fff" },
-  scroll: { padding: 20 },
+  scroll: { padding: 20, paddingBottom: 60 },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -206,6 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#321904",
     marginBottom: 12,
+    textTransform: "capitalize",
   },
 
   buttonRow: {
@@ -256,6 +256,9 @@ const styles = StyleSheet.create({
     color: "#321904",
   },
 
+  listaEventos: {
+    marginBottom: 20,
+  },
   eventoCard: {
     borderWidth: 1,
     borderColor: "#FFD9B3",
@@ -306,7 +309,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 30,
     padding: 14,
-    marginTop: 20,
+    marginTop: 10,
     elevation: 5,
     shadowColor: "#321904",
     shadowOpacity: 0.1,
