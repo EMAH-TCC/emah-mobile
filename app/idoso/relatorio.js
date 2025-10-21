@@ -27,18 +27,45 @@ async function getUserId(userId) {
 }
 
 async function selectQuestionario(pacienteId) {
-    const { data, error } = await supabase
+    const { data: questionarios, error } = await supabase
         .from('questionario')
         .select('id, temperatura, peso, pressao_sistolica, pressao_diastolica, remedios, notas, data')
         .eq('id_paciente', pacienteId)
+        .order('data', { ascending: false });
 
     if (error) {
-        console.error("Erro ao inserir consulta:", error)
-        return null
+        console.error("Erro ao buscar questionários:", error);
+        return null;
     }
 
-    return data
+    if (!questionarios || questionarios.length === 0) return [];
+
+    // Buscar sintomas e humores de cada questionário
+    const questionariosComDetalhes = await Promise.all(
+        questionarios.map(async (q) => {
+            // Sintomas
+            const { data: sintomasData } = await supabase
+                .from("questionario_sintoma")
+                .select("sintoma(nome)")
+                .eq("id_questionario", q.id);
+
+            // Humores
+            const { data: humoresData } = await supabase
+                .from("questionario_sentimento")
+                .select("sentimento(nome)")
+                .eq("id_questionario", q.id);
+
+            return {
+                ...q,
+                sintomas: sintomasData?.map(s => s.sintoma.nome) || [],
+                humores: humoresData?.map(h => h.sentimento.nome) || [],
+            };
+        })
+    );
+
+    return questionariosComDetalhes;
 }
+
 
 export default function Relatorio() {
     const router = useRouter();
@@ -121,6 +148,19 @@ export default function Relatorio() {
             <View style={styles.barraHorizontal}></View>
             <Text style={styles.cardTextPressao}>{item.pressao_diastolica}</Text>
             <Text style={styles.cardText}>Remédios: {formatarRemedios(item.remedios)}</Text>
+            
+            <Text style={styles.cardText}>Sintomas:</Text>
+            {item.sintomas.length > 0
+                ? item.sintomas.map((s, i) => <Text key={i} style={styles.cardText}>- {s}</Text>)
+                : <Text style={styles.cardText}>Nenhum</Text>
+            }
+
+            <Text style={styles.cardText}>Humores:</Text>
+            {item.humores.length > 0
+                ? item.humores.map((h, i) => <Text key={i} style={styles.cardText}>- {h}</Text>)
+                : <Text style={styles.cardText}>Nenhum</Text>
+            }
+
             <Text style={styles.cardText}>Notas: {item.notas}</Text>
         </View>
     );

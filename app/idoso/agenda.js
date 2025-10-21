@@ -12,6 +12,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  FlatList,
 } from "react-native";
 import { Calendar as CalendarView } from "react-native-calendars";
 import { supabase } from "../../utils/supabase";
@@ -23,6 +24,7 @@ export default function Agenda() {
   const id_paciente = Number(idPaciente);
 
   const [selected, setSelected] = useState("");
+  const [eventos, setEventos] = useState([]);
 
   const alertaFalhaNaPermissao = () =>
     Alert.alert(
@@ -66,128 +68,245 @@ export default function Agenda() {
       .eq("id_paciente", id_paciente);
 
     if (error) console.error(error);
-    else setEventos(eventos);
+    else setEventos(eventosDoDia || []);
   }
 
-  return (
+return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <ScrollView style={styles.scrollContent}>
-          <View style={styles.container}>
-            <View style={styles.header}>
-              <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => router.back()}
-              >
-                <View style={styles.backCircle}>
-                  <Ionicons name="arrow-back" size={24} color="#321904" />
-                </View>
-              </TouchableOpacity>
-              <Text style={styles.headerTitle}>Agenda</Text>
-            </View>
+        <ScrollView contentContainerStyle={styles.scroll}>
+          <View style={styles.header}>
+            <Ionicons name="calendar-outline" size={24} color="#FF8C42" />
+            <Text style={styles.headerTitle}>Agenda de Cuidados</Text>
+          </View>
+
+          <View style={styles.cardCalendario}>
+            <Text style={styles.dataSelecionadaTitulo}>Data selecionada</Text>
+            <Text style={styles.dataSelecionadaTexto}>
+              {selected
+                ? new Date(selected).toLocaleDateString("pt-BR", {
+                    weekday: "long",
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })
+                : "Selecione uma data"}
+            </Text>
 
             <CalendarView
-              onDayPress={(day) => {
-                setSelected(day.dateString);
-                console.log("selected day", day);
-              }}
+              onDayPress={(day) => setSelected(day.dateString)}
               markedDates={{
                 [selected]: {
                   selected: true,
                   disableTouchEvent: true,
-                  selectedDotColor: "orange",
+                  selectedColor: "#FF8C42",
                 },
+              }}
+              theme={{
+                selectedDayBackgroundColor: "#FF8C42",
+                todayTextColor: "#FF8C42",
+                arrowColor: "#FF8C42",
+                textMonthFontWeight: "bold",
               }}
             />
           </View>
-        </ScrollView>
-        <View>
+
+          <View style={styles.buttonRow}>
+            <TouchableOpacity style={styles.botaoPrincipal}>
+              <Ionicons name="add-circle-outline" size={18} color="#fff" />
+              <Text style={styles.textoBotaoPrincipal}>Medicamento</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.botaoSecundario}>
+              <Ionicons name="calendar-outline" size={18} color="#FF8C42" />
+              <Text style={styles.textoBotaoSecundario}>Calendário</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.agendaDiaHeader}>
+            <Ionicons name="calendar-outline" size={20} color="#FF8C42" />
+            <Text style={styles.agendaDiaTitulo}>Agenda do Dia</Text>
+          </View>
+
+          <FlatList
+            data={eventos}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.eventoCard}>
+                <View style={styles.eventoCabecalho}>
+                  <Text style={styles.horarioTexto}>{item.horario}</Text>
+                  <View style={styles.tagMedicamento}>
+                    <Text style={styles.tagTexto}>Medicamento</Text>
+                  </View>
+                  <TouchableOpacity>
+                    <Ionicons name="trash-outline" size={20} color="#cc3a3a" />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.eventoTitulo}>{item.titulo}</Text>
+              </View>
+            )}
+            ListEmptyComponent={
+              <Text style={styles.semEventos}>
+                Nenhum evento para esta data.
+              </Text>
+            }
+          />
+
           <TouchableOpacity
             style={styles.botaoAdicionar}
-            onPress={() => router.push({
-                pathname: '/idoso/adicionarAgendamento',
+            onPress={() =>
+              router.push({
+                pathname: "/idoso/adicionarAgendamento",
                 params: { id: id_paciente },
               })
             }
           >
             <Ionicons name="add" size={28} color="#321904" />
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
-async function getDefaultCalendarSource() {
-  const defaultCalendar = await Calendar.getDefaultCalendarAsync();
-  return defaultCalendar.source;
-}
-
-async function createCalendar() {
-  const defaultCalendarSource =
-    Platform.OS === "ios"
-      ? await getDefaultCalendarSource()
-      : { isLocalAccount: true, name: "Expo Calendar" };
-
-  const newCalendarID = await Calendar.createCalendarAsync({
-    title: "Expo Calendar",
-    color: "blue",
-    entityType: Calendar.EntityTypes.EVENT,
-    sourceId: defaultCalendarSource.id,
-    source: defaultCalendarSource,
-    name: "internalCalendarName",
-    ownerAccount: "personal",
-    accessLevel: Calendar.CalendarAccessLevel.OWNER,
-  });
-  console.log(`Your new calendar ID is: ${newCalendarID}`);
-}
-
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#fff" },
-  scrollContent: { padding: 17 },
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    justifyContent: "flex-start",
-  },
+  scroll: { padding: 20 },
   header: {
-    height: 60,
-    justifyContent: "center",
-    marginBottom: 20,
-    position: "relative",
-  },
-  backButton: {
-    position: "absolute",
-    left: 0,
-    top: 10,
-  },
-  backCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "#321904",
-    justifyContent: "center",
+    flexDirection: "row",
     alignItems: "center",
+    gap: 8,
+    marginBottom: 20,
   },
   headerTitle: {
     fontSize: 20,
-    color: "#321904",
     fontWeight: "bold",
-    textAlign: "center",
-    alignSelf: "center",
+    color: "#321904",
   },
+
+  cardCalendario: {
+    borderWidth: 1,
+    borderColor: "#FFD9B3",
+    borderRadius: 14,
+    padding: 16,
+    marginBottom: 20,
+    backgroundColor: "#fff",
+  },
+  dataSelecionadaTitulo: {
+    fontSize: 14,
+    color: "#321904",
+    marginBottom: 4,
+    fontWeight: "500",
+  },
+  dataSelecionadaTexto: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#321904",
+    marginBottom: 12,
+  },
+
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  botaoPrincipal: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "#FF8C42",
+    paddingVertical: 10,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 6,
+    marginRight: 10,
+  },
+  textoBotaoPrincipal: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  botaoSecundario: {
+    flex: 1,
+    flexDirection: "row",
+    borderColor: "#FF8C42",
+    borderWidth: 1,
+    paddingVertical: 10,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 6,
+  },
+  textoBotaoSecundario: {
+    color: "#FF8C42",
+    fontWeight: "bold",
+  },
+
+  agendaDiaHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 10,
+  },
+  agendaDiaTitulo: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#321904",
+  },
+
+  eventoCard: {
+    borderWidth: 1,
+    borderColor: "#FFD9B3",
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 10,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  eventoCabecalho: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  horarioTexto: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#321904",
+  },
+  tagMedicamento: {
+    backgroundColor: "#FFF0E0",
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  tagTexto: {
+    color: "#FF8C42",
+    fontWeight: "600",
+    fontSize: 12,
+  },
+  eventoTitulo: {
+    fontSize: 16,
+    color: "#321904",
+  },
+  semEventos: {
+    textAlign: "center",
+    color: "#999",
+    fontStyle: "italic",
+    marginTop: 15,
+  },
+
   botaoAdicionar: {
-    position: "absolute",
-    bottom: 20,
     alignSelf: "center",
     backgroundColor: "#fff",
     borderRadius: 30,
     padding: 14,
+    marginTop: 20,
     elevation: 5,
     shadowColor: "#321904",
     shadowOpacity: 0.1,

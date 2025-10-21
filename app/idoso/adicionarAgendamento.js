@@ -46,34 +46,6 @@ async function addAgendamento(id_paciente, nome, descricao, data_evento) {
   return data[0];
 }
 
-
-{
-  /* */
-  /* async function salvarAgendamentos() {
-  const user = await getUser();
-  if (!user) return;
-
-  const pacienteId = id_paciente;
-  if (!pacienteId) {
-    console.log("ID do paciente inválido");
-    return;
-  }
-
-  const evento = await addAgendamento(
-    pacienteId, 
-    nome_evento,
-    descricacao,
-    data_evento
-  );
-
-  console.log("Evento adicionado:", evento);
-
-  router.push({
-    pathname: "/idoso/agenda",
-    params: { id: pacienteId },
-  });
-}*/
-}
 export default function AdicionarAgendamento() {
   const router = useRouter();
   const params = useLocalSearchParams();
@@ -84,6 +56,9 @@ export default function AdicionarAgendamento() {
   const [nome_evento, setNome] = useState(params.nome_evento || "");
   const [descricao, setDescricao] = useState(params.descricao || "");
   const [data_evento, setData] = useState("");
+  const [errorFields, setErrorFields] = useState([]);
+  const [horarioInicio, setHoararioInicio] = useState("");
+  const [horarioFim, setHorarioFim] = useState("");
 
   async function salvarAgendamentos() {
     const user = await getUser();
@@ -94,11 +69,14 @@ export default function AdicionarAgendamento() {
       return;
     }
 
+    const [dia, mes, ano] = data_evento.split("/");
+    const dataFormatada = `${ano}-${mes}-${dia}`;
+
     const evento = await addAgendamento(
       id_paciente,
       nome_evento,
       descricao,
-      data_evento
+      dataFormatada
     );
     console.log("Evento adicionado: ", evento);
 
@@ -108,6 +86,25 @@ export default function AdicionarAgendamento() {
     });
   }
 
+  function formataData(text) {
+    let cleaned = text.replace(/\D/g, "");
+    if (cleaned.length <= 2) {
+      setData(cleaned);
+      return;
+    }
+    if (cleaned.length <= 4) {
+      setData(cleaned.slice(0, 2) + "/" + cleaned.slice(2));
+      return;
+    }
+    setData(
+      cleaned.slice(0, 2) +
+        "/" +
+        cleaned.slice(2, 4) +
+        "/" +
+        cleaned.slice(4, 8)
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
@@ -115,59 +112,64 @@ export default function AdicionarAgendamento() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView style={styles.scrollContent}>
-        <View style={styles.container}>
-          {/* Cabeçalho com botão de voltar e título */}
-          <View style={styles.header}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => router.back()}
-            >
-              <View style={styles.backCircle}>
-                <Ionicons name="arrow-back" size={24} color="#321904" />
-              </View>
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Adicionar Agendamento</Text>
-          </View>
-
-          {/* Conteúdo principal */}
-          <ScrollView contentContainerStyle={styles.scrollContent}>
-            <TextInput
-              style={styles.input}
-              placeholder="Nome do evento"
-              value={nome_evento}
-              onChangeText={setNome}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Descrição do evento"
-              value={descricao}
-              onChangeText={setDescricao}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Data do evento (AAAA-MM-DD)"
-              value={data_evento}
-              onChangeText={setData}
-            />
-
-            {/* Botões de ação */}
-            <View style={styles.footer}>
+          <View style={styles.container}>
+            {/* Cabeçalho com botão de voltar e título */}
+            <View style={styles.header}>
               <TouchableOpacity
-                style={[styles.button, styles.primaryButton]}
-                onPress={salvarAgendamentos}
-              >
-                <Text style={styles.buttonText}>Salvar</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.button, styles.secondaryButton]}
+                style={styles.backButton}
                 onPress={() => router.back()}
               >
-                <Text style={styles.buttonText}>Cancelar</Text>
+                <View style={styles.backCircle}>
+                  <Ionicons name="arrow-back" size={24} color="#321904" />
+                </View>
               </TouchableOpacity>
+              <Text style={styles.headerTitle}>Adicionar Agendamento</Text>
             </View>
-          </ScrollView>
-        </View>
+
+            {/* Conteúdo principal */}
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+              <TextInput
+                style={styles.input}
+                placeholder="Nome do evento"
+                value={nome_evento}
+                onChangeText={setNome}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Descrição do evento"
+                value={descricao}
+                onChangeText={setDescricao}
+              />
+              <TextInput
+                placeholder="Data do evento (DD/MM/AAAA)"
+                placeholderTextColor={
+                  errorFields.includes("data_evento") ? "red" : "#321904"
+                }
+                keyboardType="numeric"
+                value={data_evento}
+                onChangeText={formataData}
+                style={styles.input}
+                maxLength={10}
+              />
+
+              {/* Botões de ação */}
+              <View style={styles.footer}>
+                <TouchableOpacity
+                  style={[styles.button, styles.primaryButton]}
+                  onPress={salvarAgendamentos}
+                >
+                  <Text style={styles.buttonText}>Salvar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.button, styles.secondaryButton]}
+                  onPress={() => router.back()}
+                >
+                  <Text style={styles.buttonText}>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
