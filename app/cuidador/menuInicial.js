@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   menuButton: {
     width: '100%',
     height: 100,
-    backgroundColor: '#E5D9F2',
+    backgroundColor: '#f5ece0ff',
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
