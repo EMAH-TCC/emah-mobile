@@ -29,7 +29,7 @@ async function getUserId(userId) {
 async function selectQuestionario(pacienteId) {
     const { data: questionarios, error } = await supabase
         .from('questionario')
-        .select('id, temperatura, peso, pressao_sistolica, pressao_diastolica, remedios, notas, data')
+        .select('id, temperatura, pressao_sistolica, pressao_diastolica, remedios, notas, data')
         .eq('id_paciente', pacienteId)
         .order('data', { ascending: false });
 
@@ -143,7 +143,6 @@ export default function Relatorio() {
         <View style={styles.card}>
             <Text style={styles.cardText}>Questionário do dia : {formatarData(item.data)}</Text>
             <Text style={styles.cardText}>Temperatura: {item.temperatura} °C</Text>
-            <Text style={styles.cardText}>Peso: {item.peso}Kg</Text>
             <Text style={styles.cardText}>Pressão: {item.pressao_sistolica}</Text>
             <View style={styles.barraHorizontal}></View>
             <Text style={styles.cardTextPressao}>{item.pressao_diastolica}</Text>
@@ -196,16 +195,6 @@ export default function Relatorio() {
 
                     </View>
                 </ScrollView>
-
-                {/* Botão da tela inicial */}
-                <TouchableOpacity style={styles.homeButton} onPress={() => router.replace(
-                    {
-                        pathname: '/idoso/menuInicial',
-                        params: { id: params.id },
-                    }
-                )}>
-                    <Ionicons name="home-outline" size={28} color="#321904" />
-                </TouchableOpacity>
 
                 {/* menu suspenso */}
                 <Modal
@@ -287,20 +276,6 @@ const styles = StyleSheet.create({
         marginBottom: 100,
     },
     addButtonText: { color: '#321904', fontWeight: 'bold', fontSize: 16 },
-
-    homeButton: {
-        position: 'absolute',
-        bottom: 20,
-        alignSelf: 'center',
-        backgroundColor: '#fff',
-        borderRadius: 30,
-        padding: 14,
-        elevation: 5,
-        shadowColor: '#321904',
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        shadowOffset: { width: 0, height: 2 },
-    },
 
     modalOverlay: { flex: 1, backgroundColor: 'transparent' },
     menuContainer: {

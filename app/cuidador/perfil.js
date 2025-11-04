@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         width: '100%',
         maxWidth: 300,
         alignSelf: 'center',
-        marginBottom: 30,
+        marginBottom: 50,
     },
     button: {
         paddingVertical: 14,

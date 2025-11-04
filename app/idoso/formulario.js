@@ -96,7 +96,6 @@ export default function Formulario() {
     { nome: "Diarreia", icon: "water-outline" },
     { nome: "Inchaço", icon: "alert-circle-outline" },
     { nome: "Febre", icon: "thermometer-outline" },
-    { nome: "...", icon: "ellipsis-horizontal-outline" },
   ];
 
   //humores com iScones
@@ -114,7 +113,6 @@ export default function Formulario() {
     { nome: "Pouca energia", icon: "battery-dead-outline" },
     { nome: "Apático", icon: "ellipse-outline" },
     { nome: "Confuso", icon: "help-circle-outline" },
-    { nome: "...", icon: "ellipsis-horizontal-outline" },
   ];
 
   async function insereQuestionario(dadosQuestionario) {
@@ -198,7 +196,6 @@ export default function Formulario() {
       const idQuestionario = await addQuestionario(
         idPaciente,
         temperatura,
-        peso,
         pressaoSistolica,
         pressaoDiastolica,
         remedios,
@@ -242,7 +239,7 @@ export default function Formulario() {
             >
               <Ionicons name="arrow-back" size={20} color="#321904" />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>Formulário</Text>
+            <Text style={styles.headerTitle}>Registro Diário</Text>
           </View>
 
           {/* Sintomas */}
@@ -290,25 +287,14 @@ export default function Formulario() {
 
           <View style={styles.divider} />
 
-          {/* Peso */}
-          <TextInput
-            style={styles.input}
-            placeholder="Peso / Kg"
-            value={peso}
-            onChangeText={setPeso}
-            placeholderTextColor="#7a6c5d"
-          />
-
-          <View style={styles.divider} />
-
           {/* Remédios */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Remédios</Text>
+            <Text style={styles.sectionTitle}>Remédios não cadastrados</Text>
             {remedios.map((remedio, index) => (
               <TextInput
                 key={index}
                 style={styles.input}
-                placeholder="Adicionar remédio"
+                placeholder="Remédio"
                 placeholderTextColor="#7a6c5d"
                 value={remedio}
                 onChangeText={(text) => {
@@ -402,13 +388,6 @@ export default function Formulario() {
           </TouchableOpacity>
         </ScrollView>
 
-        {/* Botão Home */}
-        <TouchableOpacity
-          style={styles.homeButton}
-          onPress={() => router.push("/idoso/menuInicial")}
-        >
-          <Ionicons name="home-outline" size={28} color="#321904" />
-        </TouchableOpacity>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

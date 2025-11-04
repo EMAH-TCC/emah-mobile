@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
   radioOption: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
   radioText: { marginLeft: 8, color: '#321904', fontSize: 16 },
   buttonContainer: { width: '100%', maxWidth: 300, marginTop: 20 },
-  button: { paddingVertical: 14, borderRadius: 6, alignItems: 'center', marginBottom: 12, width: '100%' },
+  button: { paddingVertical: 14, borderRadius: 6, alignItems: 'center', marginBottom: 36, width: '100%' },
   primaryButton: { backgroundColor: '#F28B0C' },
   buttonText: { color: '#321904', fontWeight: 'bold', fontSize: 16 },
 });

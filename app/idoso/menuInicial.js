@@ -122,7 +122,7 @@ export default function MenuInicial() {
                 }
               )}>
                 <Ionicons name="clipboard-outline" size={38} color="#321904" />
-                <Text style={styles.menuText}>Formulário</Text>
+                <Text style={styles.menuText}>Registro Diário</Text>
               </TouchableOpacity>
             )}
 

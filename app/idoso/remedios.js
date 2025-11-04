@@ -145,16 +145,6 @@ export default function Remedios() {
           </View>
         </ScrollView>
 
-        {/* Botão da tela inicial */}
-        <TouchableOpacity style={styles.homeButton} onPress={() => router.replace(
-          {
-            pathname: '/idoso/menuInicial',
-            params: { id: params.id },
-          }
-        )}>
-          <Ionicons name="home-outline" size={28} color="#321904" />
-        </TouchableOpacity>
-
         {/* menu suspenso */}
         <Modal
           transparent={true}
@@ -231,23 +221,9 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 6,
     marginTop: 20,
-    marginBottom: 100,
+    marginBottom: 50,
   },
   addButtonText: { color: '#321904', fontWeight: 'bold', fontSize: 16 },
-
-  homeButton: {
-    position: 'absolute',
-    bottom: 20,
-    alignSelf: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 30,
-    padding: 14,
-    elevation: 5,
-    shadowColor: '#321904',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-  },
 
   modalOverlay: { flex: 1, backgroundColor: 'transparent' },
   menuContainer: {

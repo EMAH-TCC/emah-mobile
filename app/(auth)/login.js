@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 6,
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 36,
     width: '100%',
   },
   primaryButton: {
