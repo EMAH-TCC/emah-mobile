@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
 
     listContent: { paddingBottom: 20 },
     card: {
-        backgroundColor: '#f5ece0ff',
+        backgroundColor: '#f7eee5ff',
         borderRadius: 8,
         padding: 16,
         marginBottom: 16,
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     modalOverlay: { flex: 1, backgroundColor: 'transparent' },
     menuContainer: {
         position: 'absolute',
-        backgroundColor: '#F7F2FA',
+        backgroundColor: '#f7eee5ff',
         borderRadius: 8,
         paddingVertical: 10,
         width: 180,

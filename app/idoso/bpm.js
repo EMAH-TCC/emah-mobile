@@ -1,11 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -20,6 +20,8 @@ import {
   requestPermission,
   SdkAvailabilityStatus,
 } from "react-native-health-connect";
+
+import { supabase } from "../../utils/supabase";
 
 const checkAvailability = async () => {
   const status = await getSdkStatus();
@@ -61,8 +63,6 @@ async function leBPMemSegundoPlano() {
   });
   return records;
 }
-
-import { supabase } from "../../utils/supabase";
 
 async function getUser() {
   const { data, error } = await supabase.auth.getUser();
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   card: {
-    backgroundColor: "#fff9f4ff",
+    backgroundColor: "#f7eee5ff",
     borderRadius: 16,
     padding: 24,
     alignItems: "center",

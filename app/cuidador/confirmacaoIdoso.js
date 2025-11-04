@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
         lineHeight: 30,
     },
     input: {
-        backgroundColor: '#C7BEC9',
+        backgroundColor: '#f7eee5ff',
         color: '#321904',
         fontSize: 18,
         paddingVertical: 14,

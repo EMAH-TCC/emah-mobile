@@ -453,7 +453,7 @@ const styles = StyleSheet.create({
   optionRow: { flexDirection: "row", alignItems: "center", marginBottom: 8 },
   optionText: { flex: 1, marginLeft: 8, color: "#321904", fontSize: 16 },
   input: {
-    backgroundColor: "#EDE7F6",
+    backgroundColor: "#f7eee5ff",
     padding: 14,
     borderRadius: 6,
     marginBottom: 16,
@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
     color: "#321904",
   },
   inputPressao: {
-    backgroundColor: "#EDE7F6",
+    backgroundColor: "#f7eee5ff",
     width: 110,
     padding: 14,
     borderRadius: 6,

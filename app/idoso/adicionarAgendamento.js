@@ -1,17 +1,16 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
   View,
-  Alert,
 } from "react-native";
 import { supabase } from "../../utils/supabase";
 
@@ -223,7 +222,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   input: {
-    backgroundColor: "#F7F4EF",
+    backgroundColor: "#f7eee5ff",
     padding: 14,
     borderRadius: 8,
     marginTop: 6,
@@ -231,7 +230,7 @@ const styles = StyleSheet.create({
     color: "#321904",
     fontSize: 16,
     borderWidth: 1,
-    borderColor: "#E0D8C3",
+    borderColor: "#ffff",
   },
   botaoSalvar: {
     backgroundColor: "#F28B0C",

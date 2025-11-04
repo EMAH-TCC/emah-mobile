@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   input: {
-    backgroundColor: '#C7BEC9',
+    backgroundColor: '#f7eee5ff',
     borderRadius: 6,
     paddingHorizontal: 12,
     paddingVertical: 16,
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#C7BEC9',
+    backgroundColor: '#f7eee5ff',
     borderRadius: 6,
     paddingRight: 8,
     width: '100%',

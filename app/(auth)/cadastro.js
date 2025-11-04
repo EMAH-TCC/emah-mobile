@@ -372,21 +372,21 @@ const styles = StyleSheet.create({
   centeredContent: { width: '100%', alignItems: 'center' },
   profileContainer: { alignItems: 'center', marginBottom: 20 },
   profileImage: {
-    width: 80, height: 80, borderRadius: 40, backgroundColor: '#E5D9F2',
+    width: 80, height: 80, borderRadius: 40, backgroundColor: '#f7eee5ff',
     justifyContent: 'center', alignItems: 'center', marginBottom: 8
   },
   profileText: { fontSize: 14, color: '#321904' },
   inputContainer: { marginBottom: 20, width: '100%', maxWidth: 300, alignItems: 'center' },
   input: {
-    backgroundColor: '#C7BEC9', borderRadius: 6, paddingHorizontal: 12, paddingVertical: 16,
+    backgroundColor: '#f7eee5ff', borderRadius: 6, paddingHorizontal: 12, paddingVertical: 16,
     fontSize: 16, color: '#321904', marginBottom: 20, width: '100%'
   },
   inputPassword: {
-    backgroundColor: '#C7BEC9', borderRadius: 6, paddingHorizontal: 12, paddingVertical: 16,
+    backgroundColor: '#f7eee5ff', borderRadius: 6, paddingHorizontal: 12, paddingVertical: 16,
     fontSize: 16, color: '#321904'
   },
   passwordContainer: {
-    flexDirection: 'row', alignItems: 'center', backgroundColor: '#C7BEC9',
+    flexDirection: 'row', alignItems: 'center', backgroundColor: '#f7eee5ff',
     borderRadius: 6, paddingRight: 8, marginBottom: 20, width: '100%'
   },
   eyeIcon: { paddingHorizontal: 5 },

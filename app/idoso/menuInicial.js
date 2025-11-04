@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   menuButton: {
     width: '47%',
     aspectRatio: 1, // mantém proporção quadrada
-    backgroundColor: '#E5D9F2',
+    backgroundColor: '#f7eee5ff',
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',

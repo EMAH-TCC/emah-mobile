@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     title: { fontSize: 24, fontWeight: 'bold', color: '#4f1a04ff', marginTop: 20, textAlign: 'center' },
     subtitle: { fontSize: 16, color: '#4f1a04ff', marginBottom: 20, textAlign: 'center' },
     card: {
-        backgroundColor: '#fff9f4ff',
+        backgroundColor: '#f7eee5ff',
         borderRadius: 16,
         padding: 24,
         alignItems: 'center',
