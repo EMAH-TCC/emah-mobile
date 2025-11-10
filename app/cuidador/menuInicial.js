@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { supabase } from '../../utils/supabase';
 
 async function getUser() {
@@ -143,7 +143,13 @@ export default function MenuInicial() {
         </View>
 
         {/* Parte laranja */}
-        <View style={styles.topBox}></View>
+           <View style={styles.topBox}>
+          <Image
+            source={require('../../assets/images/emah_abraco.png')}
+            style={styles.topImage}
+            resizeMode="contain"
+          />
+        </View>
 
         {/* Parte inferior dos botões */}
         <ScrollView contentContainerStyle={styles.bottomBox}>
@@ -200,14 +206,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 10,
   },
-  greetingText: { fontSize: 20, color: '#321904', fontWeight: 'bold' },
+  greetingText: { fontSize: 25, color: '#321904', fontWeight: 'bold' },
 
   topBox: {
     height: '43%',
     backgroundColor: '#F28B0C',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+   justifyContent: 'center',
+    alignItems: 'center',
   },
+  topImage: {
+    width: '70%',
+    height: '90%',
+    marginTop: 40,
+  },
+
 
   bottomBox: {
     paddingHorizontal: 15,

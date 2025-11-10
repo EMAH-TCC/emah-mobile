@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
 
 async function getUser() {
@@ -39,6 +39,7 @@ async function selectNomeUser(pacienteId) {
 
   return data
 }
+
 export default function MenuInicial() {
   const router = useRouter();
   const [nomeUser, setNomeUser] = useState([]);
@@ -89,6 +90,7 @@ export default function MenuInicial() {
     }
     getTipoUser();
   }, []);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -107,9 +109,13 @@ export default function MenuInicial() {
           </TouchableOpacity>
         </View>
 
-
-        {/* Parte laranja */}
-        <View style={styles.topBox}></View>
+        <View style={styles.topBox}>
+          <Image
+            source={require('../../assets/images/emah_abraco.png')}
+            style={styles.topImage}
+            resizeMode="contain"
+          />
+        </View>
 
         {/* Parte inferior dos botões */}
         <ScrollView contentContainerStyle={styles.bottomBox}>
@@ -186,7 +192,6 @@ export default function MenuInicial() {
                 <Text style={styles.menuText}>Cuidadores</Text>
               </TouchableOpacity>
             )}
-
           </View>
         </ScrollView>
       </View>
@@ -209,13 +214,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 10,
   },
-  greetingText: { fontSize: 20, color: '#321904', fontWeight: 'bold' },
+  greetingText: { fontSize: 25, color: '#321904', fontWeight: 'bold' },
 
   topBox: {
     height: '37%',
     backgroundColor: '#F28B0C',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  topImage: {
+    width: '70%',
+    height: '90%',
+    marginTop: 40,
   },
 
   bottomBox: {
@@ -231,7 +243,7 @@ const styles = StyleSheet.create({
   },
   menuButton: {
     width: '47%',
-    aspectRatio: 1, // mantém proporção quadrada
+    aspectRatio: 1,
     backgroundColor: '#f7eee5ff',
     borderRadius: 12,
     justifyContent: 'center',

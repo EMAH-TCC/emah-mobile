@@ -23,7 +23,7 @@ export default function Perfil() {
                 {/* Botão Sair */}
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={[styles.button, styles.primaryButton]} onPress={signOut}>
-                        <Text style={styles.buttonText}>Sair</Text>
+                        <Text style={styles.buttonText}>Sair da Conta</Text>
                     </TouchableOpacity>
                 </View>
             </View>
