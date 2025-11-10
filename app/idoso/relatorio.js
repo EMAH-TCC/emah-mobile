@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 100,
     },
-    addButtonText: { color: '#321904', fontWeight: 'bold', fontSize: 16 },
+    addButtonText: { color: '#321904', fontWeight: 'bold', fontSize: 20 },
 
     modalOverlay: { flex: 1, backgroundColor: 'transparent' },
     menuContainer: {
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     menuItem: { paddingVertical: 12, paddingHorizontal: 16 },
-    menuText: { fontSize: 16, color: '#321904' },
+    menuText: { fontSize: 20, color: '#321904' },
     barraHorizontal: {
         height: 1,
         backgroundColor: 'grey',

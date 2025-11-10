@@ -92,7 +92,7 @@ export default function Bpm() {
 }
 
 const styles = StyleSheet.create({
-    title: { fontSize: 24, fontWeight: 'bold', color: '#4f1a04ff', marginTop: 20, textAlign: 'center' },
+    title: { fontSize: 25, fontWeight: 'bold', color: '#4f1a04ff', marginTop: 20, textAlign: 'center' },
     subtitle: { fontSize: 16, color: '#4f1a04ff', marginBottom: 20, textAlign: 'center' },
     card: {
         backgroundColor: '#f7eee5ff',
@@ -120,13 +120,13 @@ const styles = StyleSheet.create({
         zIndex: -1,
     },
     bpm: { fontSize: 64, fontWeight: 'bold', color: '#C2410C' },
-    bpmLabel: { fontSize: 18, color: '#EA580C', marginBottom: 12 },
+    bpmLabel: { fontSize: 20, color: '#EA580C', marginBottom: 12 },
     infoCard: { backgroundColor: 'rgba(249, 245, 239, 0.6)', borderRadius: 12, padding: 16, width: '100%', marginBottom: 20 },
-    infoTitle: { color: '#C2410C', fontSize: 18, fontWeight: 'bold', marginBottom: 12, textAlign: 'center' },
+    infoTitle: { color: '#C2410C', fontSize: 20, fontWeight: 'bold', marginBottom: 12, textAlign: 'center' },
     infoRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-    infoLabel: { color: '#EA580C', fontSize: 16 },
-    infoValue: { color: '#C2410C', fontSize: 16, fontWeight: 'bold' },
+    infoLabel: { color: '#EA580C', fontSize: 20 },
+    infoValue: { color: '#C2410C', fontSize: 20, fontWeight: 'bold' },
     button: { backgroundColor: '#F97316', paddingVertical: 12, paddingHorizontal: 36, borderRadius: 24 },
-    buttonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+    buttonText: { color: '#fff', fontSize: 20, fontWeight: 'bold' },
     buttonPermissoes: { backgroundColor: '#ee8439ff', paddingVertical: 12, paddingHorizontal: 32, borderRadius: 24, alignItems: 'center', },
 });

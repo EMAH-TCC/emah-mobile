@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontWeight: "bold",
     color: "#321904",
-    fontSize: 15,
+    fontSize: 20,
   },
   input: {
     backgroundColor: "#f7eee5ff",
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginBottom: 12,
     color: "#321904",
-    fontSize: 16,
+    fontSize: 20,
     borderWidth: 1,
     borderColor: "#ffff",
   },
@@ -246,6 +246,6 @@ const styles = StyleSheet.create({
   textoBotao: {
     color: "#321904",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 20,
   },
 });

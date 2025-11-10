@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     input: {
         backgroundColor: '#f7eee5ff',
         color: '#321904',
-        fontSize: 18,
+        fontSize: 20,
         paddingVertical: 14,
         paddingHorizontal: 16,
         borderRadius: 6,
@@ -210,6 +210,6 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#321904',
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 20,
     },
 });

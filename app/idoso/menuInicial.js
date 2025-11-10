@@ -243,5 +243,5 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     marginBottom: 18,
   },
-  menuText: { marginTop: 8, fontSize: 18, color: '#321904', fontWeight: '500' },
+  menuText: { marginTop: 8, fontSize: 20, color: '#321904', fontWeight: '500' },
 });

@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     greetingText: {
-        fontSize: 22,
+        fontSize: 25,
         color: '#321904',
         fontWeight: 'bold',
         marginBottom: 15,
@@ -77,6 +77,6 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#321904',
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 20,
     },
 });

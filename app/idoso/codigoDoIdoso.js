@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     color: '#321904',
-    fontSize: 18,
+    fontSize: 20,
     textAlign: 'center',
     marginBottom: 15,
     maxWidth: 320,
@@ -165,6 +165,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#321904',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 20,
   },
 });

@@ -229,12 +229,12 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginBottom: 16,
     color: '#321904',
-    fontSize: 16,
+    fontSize: 20,
   },
   text: {
     padding: 14,
     color: '#321904',
-    fontSize: 16,
+    fontSize: 20,
   },
   footer: {
     paddingVertical: 20,
@@ -257,11 +257,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#321904',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 20,
   },
   radioContainer: { marginTop: 10, alignSelf: 'flex-start' },
   radioOption: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  radioText: { marginLeft: 8, color: '#321904', fontSize: 16 },
+  radioText: { marginLeft: 8, color: '#321904', fontSize: 20 },
   inputTime: {
     flexDirection: "row",
     alignItems: "center",
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     width: 100,
     textAlign: "center",
     borderRadius: 5,
-    fontSize: 16,
+    fontSize: 20,
     marginBottom: 10,
   },
 });

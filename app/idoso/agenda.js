@@ -114,8 +114,8 @@ export default function Agenda() {
                 todayTextColor: "#FF8C42",
                 arrowColor: "#FF8C42",
                 textMonthFontWeight: "bold",
-                textDayFontSize: 16,
-                textMonthFontSize: 18,
+                textDayFontSize: 20,
+                textMonthFontSize: 20,
               }}
             />
           </View>
@@ -195,13 +195,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   dataSelecionadaTitulo: {
-    fontSize: 14,
+    fontSize: 20,
     color: "#321904",
     marginBottom: 4,
     fontWeight: "500",
   },
   dataSelecionadaTexto: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#321904",
     marginBottom: 12,
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   agendaDiaTitulo: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#321904",
   },
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   horarioTexto: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#321904",
   },
@@ -291,10 +291,10 @@ const styles = StyleSheet.create({
   tagTexto: {
     color: "#FF8C42",
     fontWeight: "600",
-    fontSize: 12,
+    fontSize: 20,
   },
   eventoTitulo: {
-    fontSize: 16,
+    fontSize: 20,
     color: "#321904",
   },
   semEventos: {

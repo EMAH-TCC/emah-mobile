@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 25,
     color: '#321904',
     fontWeight: 'bold',
     textAlign: 'center',
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     position: 'relative',
   },
-  cardText: { color: '#321904', fontSize: 16, marginBottom: 4 },
+  cardText: { color: '#321904', fontSize: 20, marginBottom: 4 },
   optionsButton: { position: 'absolute', top: 10, right: 10 },
 
   addButton: {
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 50,
   },
-  addButtonText: { color: '#321904', fontWeight: 'bold', fontSize: 16 },
+  addButtonText: { color: '#321904', fontWeight: 'bold', fontSize: 20 },
 
   modalOverlay: { flex: 1, backgroundColor: 'transparent' },
   menuContainer: {
@@ -235,5 +235,5 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   menuItem: { paddingVertical: 12, paddingHorizontal: 16 },
-  menuText: { fontSize: 16, color: '#321904' },
+  menuText: { fontSize: 20, color: '#321904' },
 });

@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     marginBottom: 18,
   },
-  menuText: { marginTop: 8, fontSize: 18, color: '#321904', fontWeight: '500' },
+  menuText: { marginTop: 8, fontSize: 20, color: '#321904', fontWeight: '500' },
   listContent: { paddingBottom: 20 },
   card: {
     backgroundColor: '#f5ece0ff',
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 100,
   },
-  addButtonText: { color: '#321904', fontWeight: 'bold', fontSize: 16 },
+  addButtonText: { color: '#321904', fontWeight: 'bold', fontSize: 20 },
 
   homeButton: {
     position: 'absolute',
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   menuItem: { paddingVertical: 12, paddingHorizontal: 16 },
-  menuText: { fontSize: 16, color: '#321904' },
+  menuText: { fontSize: 20, color: '#321904' },
   barraHorizontal: {
     height: 1,
     backgroundColor: 'grey',

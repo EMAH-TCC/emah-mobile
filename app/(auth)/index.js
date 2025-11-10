@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     color: '#F28B0C',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#321904',
     marginTop: 8,
   },
@@ -100,6 +100,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#321904',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 20,
   },
 });

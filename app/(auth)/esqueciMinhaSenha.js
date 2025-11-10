@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   instructions: {
-    fontSize: 18,
+    fontSize: 20,
     color: '#321904',
     textAlign: 'center',
     marginBottom: 30,
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingHorizontal: 12,
     paddingVertical: 16,
-    fontSize: 18,
+    fontSize: 20,
     color: '#321904',
     marginBottom: 20,
     width: '100%',
@@ -160,6 +160,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#321904',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 20,
   },
 });
