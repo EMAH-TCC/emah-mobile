@@ -87,11 +87,11 @@ export default function Agenda() {
             <Text style={styles.dataSelecionadaTexto}>
               {selected
                 ? new Date(selected + "T00:00:00").toLocaleDateString("pt-BR", {
-                    weekday: "long",
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric",
-                  })
+                  weekday: "long",
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })
                 : "Selecione uma data"}
             </Text>
 
@@ -163,7 +163,7 @@ export default function Agenda() {
               })
             }
           >
-            <Ionicons name="add" size={28} color="#321904" />
+            <Ionicons name="add" size={28} color="#ffddc5ff" />
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
 
   botaoAdicionar: {
     alignSelf: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#FF8C42",
     borderRadius: 30,
     padding: 14,
     marginTop: 10,
