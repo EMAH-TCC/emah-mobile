@@ -117,7 +117,7 @@ async function salvarBatimentoNoBanco(pacienteId, bpm) {
   }
 }
 export default function Bpm() {
-    const router = useRouter();
+  const router = useRouter();
   const [bpm, setBpm] = useState(null);
   const [time, setTime] = useState(null);
   const [pacienteId, setPacienteId] = useState(null);
@@ -170,10 +170,10 @@ export default function Bpm() {
   const formatDate = (date) =>
     date
       ? date.toLocaleDateString("pt-BR", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
       : "--/--/----";
   const formatTime = (date) =>
     date
@@ -188,10 +188,10 @@ export default function Bpm() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity                 
-                style={styles.backButton}
-                onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#321904"/>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color="#321904" />
           </TouchableOpacity>
           <View style={{ flex: 1, alignItems: "center" }}>
             <Text style={styles.title}>Batimento Cardíaco</Text>
@@ -233,6 +233,7 @@ export default function Bpm() {
           </View>
 
           {/* Botões */}
+          {/*
           <View style={{ width: "100%", marginBottom: 20 }}>
             <TouchableOpacity
               style={styles.buttonPermissoes}
@@ -259,6 +260,7 @@ export default function Bpm() {
               <Text style={styles.buttonText}>Get Granted Permissions</Text>
             </TouchableOpacity>
           </View>
+*/}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

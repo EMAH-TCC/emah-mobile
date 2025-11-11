@@ -29,7 +29,7 @@ async function getUserId(userId) {
 async function selectQuestionario(pacienteId) {
     const { data: questionarios, error } = await supabase
         .from('questionario')
-        .select('id, temperatura, pressao_sistolica, pressao_diastolica, remedios, notas, data')
+        .select('id, temperatura, peso, pressao_sistolica, pressao_diastolica, remedios, notas, data')
         .eq('id_paciente', pacienteId)
         .order('data', { ascending: false });
 
@@ -66,6 +66,32 @@ async function selectQuestionario(pacienteId) {
     return questionariosComDetalhes;
 }
 
+async function selectUltimoBPM(paciente_id) {
+    const { data, error } = await supabase.rpc('selecionar_batimentos_do_paciente', { paciente_id: paciente_id });
+
+    if (error) {
+        console.error("Erro ao inserir consulta:", error)
+        return null
+    }
+    return data
+}
+
+async function recebeUltimoBpm() {
+    try {
+        if (!id_paciente) return;
+
+        const frequencia_cardiaca = await selectUltimoBPM(id_paciente);
+
+        if (frequencia_cardiaca) {
+            setBpm(frequencia_cardiaca[0].batimento);
+            setTime(frequencia_cardiaca[0].data_de_criacao);
+        }
+    } catch (error) {
+        console.log("Erro ao buscar último BPM:", error);
+    }
+}
+
+
 
 export default function Relatorio() {
     const router = useRouter();
@@ -77,6 +103,8 @@ export default function Relatorio() {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedRemedio, setSelectedRemedio] = useState(null);
     const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
+    const [bpm, setBpm] = useState(null);
+    const [time, setTime] = useState(null);
 
     useEffect(() => {
         async function carregarRelatorios() {
@@ -95,6 +123,40 @@ export default function Relatorio() {
         }
         carregarRelatorios();
     }, []);
+
+
+    async function recebeUltimoBpm() {
+        try {
+            if (!id_paciente) return;
+
+            const frequencia_cardiaca = await selectUltimoBPM(id_paciente);
+
+            if (frequencia_cardiaca) {
+                setBpm(frequencia_cardiaca[0].batimento);
+                setTime(frequencia_cardiaca[0].data_de_criacao);
+            }
+        } catch (error) {
+            console.log("Erro ao buscar último BPM:", error);
+        }
+    }
+
+    useEffect(() => {
+        recebeUltimoBpm();
+    }, [id_paciente]);
+    const date = new Date(time);
+    const formatDate = (time) => {
+        if (!time) return '--/--/----';
+        const date = new Date(time);
+        if (isNaN(date.getTime())) return '--/--/----';
+        return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    };
+
+    const formatTime = (time) => {
+        if (!time) return '--:--';
+        const date = new Date(time);
+        if (isNaN(date.getTime())) return '--:--';
+        return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    };
 
     const abrirMenu = (item, event) => {
         const { pageY } = event.nativeEvent;
@@ -143,11 +205,13 @@ export default function Relatorio() {
         <View style={styles.card}>
             <Text style={styles.cardText}>Questionário do dia : {formatarData(item.data)}</Text>
             <Text style={styles.cardText}>Temperatura: {item.temperatura} °C</Text>
+            <Text style={styles.cardText}>Peso: {item.peso}Kg</Text>
             <Text style={styles.cardText}>Pressão: {item.pressao_sistolica}</Text>
             <View style={styles.barraHorizontal}></View>
             <Text style={styles.cardTextPressao}>{item.pressao_diastolica}</Text>
             <Text style={styles.cardText}>Remédios: {formatarRemedios(item.remedios)}</Text>
-            
+
+
             <Text style={styles.cardText}>Sintomas:</Text>
             {item.sintomas.length > 0
                 ? item.sintomas.map((s, i) => <Text key={i} style={styles.cardText}>- {s}</Text>)
@@ -195,6 +259,16 @@ export default function Relatorio() {
 
                     </View>
                 </ScrollView>
+
+                {/* Botão da tela inicial */}
+                <TouchableOpacity style={styles.homeButton} onPress={() => router.replace(
+                    {
+                        pathname: '/idoso/menuInicial',
+                        params: { id: params.id },
+                    }
+                )}>
+                    <Ionicons name="home-outline" size={28} color="#321904" />
+                </TouchableOpacity>
 
                 {/* menu suspenso */}
                 <Modal
@@ -255,7 +329,7 @@ const styles = StyleSheet.create({
 
     listContent: { paddingBottom: 20 },
     card: {
-        backgroundColor: '#f7eee5ff',
+        backgroundColor: '#f5ece0ff',
         borderRadius: 8,
         padding: 16,
         marginBottom: 16,
@@ -275,19 +349,33 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 100,
     },
-    addButtonText: { color: '#321904', fontWeight: 'bold', fontSize: 20 },
+    addButtonText: { color: '#321904', fontWeight: 'bold', fontSize: 16 },
+
+    homeButton: {
+        position: 'absolute',
+        bottom: 20,
+        alignSelf: 'center',
+        backgroundColor: '#fff',
+        borderRadius: 30,
+        padding: 14,
+        elevation: 5,
+        shadowColor: '#321904',
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 2 },
+    },
 
     modalOverlay: { flex: 1, backgroundColor: 'transparent' },
     menuContainer: {
         position: 'absolute',
-        backgroundColor: '#f7eee5ff',
+        backgroundColor: '#F7F2FA',
         borderRadius: 8,
         paddingVertical: 10,
         width: 180,
         elevation: 5,
     },
     menuItem: { paddingVertical: 12, paddingHorizontal: 16 },
-    menuText: { fontSize: 20, color: '#321904' },
+    menuText: { fontSize: 16, color: '#321904' },
     barraHorizontal: {
         height: 1,
         backgroundColor: 'grey',

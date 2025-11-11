@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
 
 async function getUser() {
@@ -143,7 +143,7 @@ export default function MenuInicial() {
         </View>
 
         {/* Parte laranja */}
-           <View style={styles.topBox}>
+        <View style={styles.topBox}>
           <Image
             source={require('../../assets/images/emah_abraco.png')}
             style={styles.topImage}
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F28B0C',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-   justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   topImage: {
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   menuButton: {
     width: '100%',
     height: 100,
-    backgroundColor: '#f5ece0ff',
+    backgroundColor: '#f6ab50ff',
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
