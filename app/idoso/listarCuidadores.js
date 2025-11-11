@@ -101,18 +101,13 @@ export default function MenuInicial() {
             <View style={styles.container}>
                 {/* Cabeçalho */}
                 <View style={styles.header}>
-                    <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-                        <View style={styles.backCircle}>
-                            <Ionicons name="arrow-back" size={24} color="#321904" />
-                        </View>
-                    </TouchableOpacity>
-                </View>
-                <View>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
-                    <Text></Text>
+                             <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+                               <View style={styles.backCircle}>
+                                 <Ionicons name="arrow-back" size={24} color="#321904" />
+                               </View>
+                             </TouchableOpacity>
+                             <Text style={styles.headerTitle}>Cuidadores</Text>
+                           </View>
                 </View>
 
                 {/* Parte inferior dos botões */}
@@ -150,7 +145,6 @@ export default function MenuInicial() {
             </TouchableOpacity>
           </Modal>*/}
                 </ScrollView>
-            </View>
         </SafeAreaView>
     );
 }
@@ -160,16 +154,33 @@ const styles = StyleSheet.create({
     container: { flex: 1 },
 
     header: {
-        paddingTop: 20,
-        position: 'absolute',
-        top: 10,
-        left: 20,
-        right: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        zIndex: 10,
-    },
+    height: 60,
+    justifyContent: 'center',
+    marginBottom: 20,
+    position: 'relative',
+  },
+  backButton: {
+    position: 'absolute',
+    left: 13,
+    top: 10,
+  },
+  backCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#321904',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 25,
+    color: '#321904',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    alignSelf: 'center',
+  },
+
     greetingText: { fontSize: 20, color: '#321904', fontWeight: 'bold' },
 
     topBox: {
@@ -181,8 +192,8 @@ const styles = StyleSheet.create({
 
     bottomBox: {
         paddingHorizontal: 15,
-        paddingTop: 20,
-        paddingBottom: 40,
+        paddingTop: 1,
+        paddingBottom: 450,
     },
 
     grid: {

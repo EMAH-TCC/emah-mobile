@@ -18,7 +18,7 @@ export default function Perfil() {
                 <View style={styles.topBox}>
                     {/* Cabeçalho */}
                     <Text style={styles.greetingText}>Perfil</Text>
-                    <Ionicons name="person-outline" size={100} color="#321904" />
+                    <Ionicons name="person-outline" size={80} color="#321904" />
                 </View>
                 {/* Botão Sair */}
                 <View style={styles.buttonContainer}>
