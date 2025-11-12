@@ -93,7 +93,6 @@ function MainLayout() {
             <Stack.Screen name="idoso/agenda" options={{ headerShown: false }} />
             <Stack.Screen name="idoso/adicionarAgendamento" options={{ headerShown: false }} />
             <Stack.Screen name="idoso/listarCuidadores" options={{ headerShown: false }} />
-            <Stack.Screen name="idoso/listarCuidadores" options={{ headerShown: false }} />
             <Stack.Screen name="idoso/preFormularioIdoso" options={{ headerShown: false }} />
 
 

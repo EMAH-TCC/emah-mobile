@@ -74,16 +74,6 @@ export default function MenuInicial() {
         setSelectedPaciente(null);
     };
 
-    const removerPaciente = () => {
-        if (selectedRemedio) {
-            router.push({
-                pathname: '/cuidador/removerPaciente',
-                params: selectedPaciente,
-            });
-            fecharMenu();
-        }
-    };
-
     const renderCuidadores = ({ item }) => (
         <View style={styles.card}>
             <Text style={styles.cardText}>{item.nome_cuidador}</Text>
@@ -154,7 +144,7 @@ const styles = StyleSheet.create({
     container: { flex: 1 },
 
     header: {
-    height: 60,
+    height: 90,
     justifyContent: 'center',
     marginBottom: 20,
     position: 'relative',
@@ -162,7 +152,7 @@ const styles = StyleSheet.create({
   backButton: {
     position: 'absolute',
     left: 13,
-    top: 10,
+    top: 30,
   },
   backCircle: {
     width: 40,
