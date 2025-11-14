@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-        "infoPlist": {
+      "infoPlist": {
         "NSCalendarsUsageDescription": "O aplicativo necessita do acesso ao seu calendário para criar e gerenciar eventos."
       }
     },
@@ -53,7 +53,18 @@
         "expo-calendar",
         {
           "calendarPermission": "Permita que o nosso app acesse seu calendário para criar eventos.",
-          "remindersPermission": "Permita que o nosso app acesse seus lembretes." 
+          "remindersPermission": "Permita que o nosso app acesse seus lembretes."
+        }
+      ],
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": true,
+          "modes": [
+            "peripheral",
+            "central"
+          ],
+          "bluetoothAlwaysPermission": "Permita que EMAH se conecte a dispositivos bluetooth"
         }
       ]
     ],
