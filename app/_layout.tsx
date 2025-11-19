@@ -94,6 +94,7 @@ function MainLayout() {
             <Stack.Screen name="idoso/adicionarAgendamento" options={{ headerShown: false }} />
             <Stack.Screen name="idoso/listarCuidadores" options={{ headerShown: false }} />
             <Stack.Screen name="idoso/preFormularioIdoso" options={{ headerShown: false }} />
+            <Stack.Screen name="idoso/pulseiraSensorialBpm" options={{ headerShown: false }} />
 
 
             {/* Rotas cuidador */}

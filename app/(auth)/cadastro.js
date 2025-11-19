@@ -210,7 +210,8 @@ export default function Cadastro() {
     setPasswordMismatch(false);
 
     if (role === 'idoso') {
-      router.push('/idoso/menuInicial'); //nomes provisorios enquanto as telas não foram criadas
+      router.push('/idoso/preFormularioIdoso'); //nomes provisorios enquanto as telas não foram criadas
+      console.log("Idoso!")
     } else {
       router.push('/cuidador/menuInicial');
     }
