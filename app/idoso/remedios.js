@@ -3,17 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
-
-async function getUser() {
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error) {
-    console.log("Erro: ", error);
-    return null;
-  }
-
-  return data.user;
-}
+import { getUser } from '../../utils/userData';
 
 async function selectRemedios(pacienteId) {
   const { data, error } = await supabase

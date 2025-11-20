@@ -3,42 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
-
-async function getUser() {
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error) {
-    console.log("Erro: ", error);
-    return null;
-  }
-
-  return data.user;
-}
-
-async function getUserId(userId) {
-  const { data, error } = await supabase.from('usuarios').select('id').eq('id_user', userId).single()
-
-  if (error) {
-    console.log("Erro busca: ", error);
-    return null;
-  }
-
-  return data.id
-}
-
-async function selectNomeUser(pacienteId) {
-  const { data, error } = await supabase
-    .from('paciente')
-    .select('nome')
-    .eq('id', pacienteId)
-
-  if (error) {
-    console.error("Erro ao consultar:", error)
-    return null
-  }
-
-  return data
-}
+import { getUser, getUserId, selectNomeUser } from '../../utils/userData';
 
 export default function MenuInicial() {
   const router = useRouter();
@@ -49,6 +14,7 @@ export default function MenuInicial() {
 
   useEffect(() => {
     async function carregarNomeUser() {
+
       const user = await getUser();
       if (!user) {
         return

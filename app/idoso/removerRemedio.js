@@ -2,17 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
-
-async function getUser() {
-    const { data, error } = await supabase.auth.getUser();
-
-    if (error) {
-        console.log("Erro: ", error);
-        return null;
-    }
-
-    return data.user;
-}
+import { getUser } from '../../utils/userData';
 
 async function deleteRemedio(idRemedio) {
     const { data, error } = await supabase
