@@ -158,6 +158,14 @@ export default function MenuInicial() {
                 <Text style={styles.menuText}>Cuidadores</Text>
               </TouchableOpacity>
             )}
+            {/*Dado cardíaco da pulseira sensorial*/}
+            <TouchableOpacity style={styles.menuButton} onPress={() => router.push({
+              pathname: '/idoso/pulseiraSensorialBpm',
+              params: { id: paciente_id },
+            })}>
+              <Ionicons name="heart" size={38} color="#321904" />
+              <Text style={styles.menuText}>Batimentos - Pulseira Sensorial</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>

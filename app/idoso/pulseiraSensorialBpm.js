@@ -1,102 +1,124 @@
-/*import { useState } from "react";
-import {
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
-import DeviceModal from "./DeviceConnectionModal";
-import useBLE from "./useBLE";
+import { decode } from 'base-64';
+import { useEffect, useState } from 'react';
+import { Button, PermissionsAndroid, Text, View } from 'react-native';
+import { BleManager } from 'react-native-ble-plx';
 
-const App = () => {
-    const {
-        allDevices,
-        connectedDevice,
-        connectToDevice,
-        color,
-        requestPermissions,
-        scanForPeripherals,
-    } = useBLE();
-    const [isModalVisible, setIsModalVisible] = useState < boolean > (false);
+const manager = new BleManager();
 
-    const scanForDevices = async () => {
-        const isPermissionsEnabled = await requestPermissions();
-        if (isPermissionsEnabled) {
-            scanForPeripherals();
+export default function BLEHeartRate() {
+    const [device, setDevice] = useState(null);
+    const [bpm, setBpm] = useState("");
+
+    async function requestPermissions() {
+        await PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+            PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+        ]);
+    }
+
+    useEffect(() => {
+        requestPermissions();
+    }, []);
+
+    const conectar = () => {
+        console.log("Escaneando");
+        manager.startDeviceScan(null, null, (error, device) => {
+            if (error) {
+                console.error(error);
+                return;
+            }
+
+            if (device.name === 'EMAH') {
+                console.log('Encontramos:', device.name);
+                manager.stopDeviceScan();
+
+                device.connect()
+                    .then(d => d.discoverAllServicesAndCharacteristics())
+                    .then(d => {
+                        setDevice(d);
+                        receberBPM(d);
+                    });
+            }
+        });
+    };
+
+    const decodificarBPM = (dadosBase) => {
+        if (!dadosBase) {
+            return null;
         }
-    };
 
-    const hideModal = () => {
-        setIsModalVisible(false);
-    };
+        const dadoBinario = decode(dadosBase);
+        const tamanho = dadoBinario.length;
 
-    const openModal = async () => {
-        scanForDevices();
-        setIsModalVisible(true);
+        if (tamanho < 2) {
+            console.log("Dado incompleto.")
+            return null;
+        }
+
+        const bytes = new Uint8Array(tamanho);
+
+        for (let index = 0; index < tamanho; index++) {
+            bytes[index] = dadoBinario.charCodeAt(index);
+        }
+        const dadoView = new DataView(bytes.buffer);
+        const flags = dadoView.getUint8(0);
+        const bpm16Bit = (flags & 0x01) === 1;
+
+        let bpm;
+        const bpmOffset = 1;
+
+        try {
+            if (bpm16Bit) {
+                bpm = dadoView.getUint16(bpmOffset, true);
+            } else {
+                bpm = dadoView.getUint8(bpmOffset);
+            }
+            return bpm;
+
+        } catch (e) {
+            console.error("Erro ao ler dados binários do BPM:", e);
+            return null;
+        }
+
+    }
+
+    const receberBPM = async (device) => {
+        const serviceUUID = '180D';
+        const characteristicUUID = '2A37';
+
+        device.monitorCharacteristicForService(
+            serviceUUID,
+            characteristicUUID,
+            (error, characteristic) => {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+
+                const bpmCaracteristica = characteristic.value;
+
+                console.log("Valor bruto BLE:", bpmCaracteristica);
+
+                const bpm = decodificarBPM(bpmCaracteristica);
+
+                if (bpm !== null) {
+                    const bpmString = bpm.toString();
+                    console.log("BPM extraído:", bpmString);
+                    // Define o estado na sua aplicação
+                    setBpm(bpmString);
+                } else {
+                    console.log("Falha ao decodificar o valor de BPM.");
+                }
+            }
+        );
+
     };
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: color }]}>
-            <View style={styles.heartRateTitleWrapper}>
-                {connectedDevice ? (
-                    <>
-                        <Text style={styles.heartRateTitleText}>Connected</Text>
-                    </>
-                ) : (
-                    <Text style={styles.heartRateTitleText}>
-                        Please connect the Arduino
-                    </Text>
-                )}
-            </View>
-            <TouchableOpacity onPress={openModal} style={styles.ctaButton}>
-                <Text style={styles.ctaButtonText}>Connect</Text>
-            </TouchableOpacity>
-            <DeviceModal
-                closeModal={hideModal}
-                visible={isModalVisible}
-                connectToPeripheral={connectToDevice}
-                devices={allDevices}
-            />
-        </SafeAreaView>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ fontSize: 24, marginBottom: 20 }}>BPM: {bpm}</Text>
+            <Button title="Conectar ao ESP32" onPress={conectar} />
+        </View>
     );
-};
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#f2f2f2",
-    },
-    heartRateTitleWrapper: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    heartRateTitleText: {
-        fontSize: 30,
-        fontWeight: "bold",
-        textAlign: "center",
-        marginHorizontal: 20,
-        color: "black",
-    },
-    heartRateText: {
-        fontSize: 25,
-        marginTop: 15,
-    },
-    ctaButton: {
-        backgroundColor: "#FF6060",
-        justifyContent: "center",
-        alignItems: "center",
-        height: 50,
-        marginHorizontal: 20,
-        marginBottom: 5,
-        borderRadius: 8,
-    },
-    ctaButtonText: {
-        fontSize: 18,
-        fontWeight: "bold",
-        color: "white",
-    },
-});
-
-export default App;*/
+}
