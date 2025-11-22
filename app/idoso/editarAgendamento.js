@@ -22,7 +22,7 @@ export default function editarAgendamento(){
   const [nomeEvento, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
   const [dataEvento, setData] = useState("");
-  const [horaEvento, setHora] = useState("");
+  const [horarioEvento, setHorario] = useState("");
 
   async function salvarEvento() {
     if(!nomeEvento || !dataEvento){
@@ -37,7 +37,7 @@ export default function editarAgendamento(){
         nome_evento: nomeEvento,
         descricao, 
         data_evento: dataEvento,
-        hora_evento: horaEvento,
+        horarios: horarioEvento,
         id_paciente: user.id,
       },
     ]);
@@ -46,7 +46,7 @@ export default function editarAgendamento(){
       console.error("Error ao salvar evento: ", error);
       Alert.alert("Error", "Não foi possível salavar o evento");
     } else {
-      console.alert("Sucesso", "Evento criado com sucesso!");
+      console.log("Sucesso", "Evento criado com sucesso!");
       router.back();
     }
 

@@ -13,8 +13,28 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Calendar as CalendarView } from "react-native-calendars";
+import { Calendar as CalendarView, LocaleConfig } from "react-native-calendars";
 import { supabase } from "../../utils/supabase";
+
+LocaleConfig.locales ['pt-br'] = {
+  monthNames: [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho',
+    'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ],
+    monthNamesShort: [
+    'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+    'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+  ],
+  dayNames: [
+    'Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira',
+    'Quinta-feira', 'Sexta-feira', 'Sábado'
+  ],
+  dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+  today: 'Hoje'
+
+}
+
+LocaleConfig.defaultLocale = 'pt-br';
 
 export default function Agenda() {
   const router = useRouter();
@@ -63,6 +83,15 @@ export default function Agenda() {
     else setEventos(eventosDoDia || []);
   }
 
+  async function excluirEventos(idEvento) {
+      const { error } = await supabase
+      .from("agendamento")
+      .delete()
+      .eq("id", idEvento);
+
+    if (error) console.error(error);
+    else buscarEventos(selected);
+  }
 
   const handleDayPress = (day) => {
     setSelected(day.dateString);
@@ -75,6 +104,16 @@ export default function Agenda() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView contentContainerStyle={styles.scroll}>
+          <View style={styles.mainHeader}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => router.back()}
+            >
+              <Ionicons name="arrow-back" size={20} color="#321904" />
+            </TouchableOpacity>
+            <Text style={styles.mainHeaderTitle}>Agenda</Text>
+          </View>
+
           {/* Cabeçalho */}
           <View style={styles.header}>
             <Ionicons name="calendar-outline" size={24} color="#FF8C42" />
@@ -87,11 +126,11 @@ export default function Agenda() {
             <Text style={styles.dataSelecionadaTexto}>
               {selected
                 ? new Date(selected + "T00:00:00").toLocaleDateString("pt-BR", {
-                  weekday: "long",
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                })
+                    weekday: "long",
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })
                 : "Selecione uma data"}
             </Text>
 
@@ -134,12 +173,23 @@ export default function Agenda() {
             ) : (
               eventos.map((item) => (
                 <View key={item.id} style={styles.eventoCard}>
+
                   <View style={styles.eventoCabecalho}>
-                    <Text style={styles.horarioTexto}>{item.horario}</Text>
+
+                    <Text style={styles.horarioTexto}>
+                      {item.horarios?.inicio} - {item.horarios?.fim}
+                    </Text>
+
                     <View style={styles.tagMedicamento}>
-                      <Text style={styles.tagTexto}>Medicamento</Text>
+                      <Text style={styles.tagTexto}>
+                        {
+                          item.categoria && item.categoria.trim() != ""
+                          ? item.categoria : "Sem categoria"
+                        }
+                      </Text>
                     </View>
-                    <TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => excluirEventos(item.id)}>
                       <Ionicons
                         name="trash-outline"
                         size={20}
@@ -147,7 +197,15 @@ export default function Agenda() {
                       />
                     </TouchableOpacity>
                   </View>
-                  <Text style={styles.eventoTitulo}>{item.titulo}</Text>
+
+                  <Text style={styles.eventoTitulo}>{item.nome_evento}</Text>
+
+                  {item.descricao ? (
+                    <Text style={{fontSize: 18, color: "#555", marginTop: 4}}>
+                      {item.descricao}
+                    </Text>
+                  ) : null}
+
                 </View>
               ))
             )}
@@ -184,6 +242,33 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#321904",
+  },
+
+    mainHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+    position: "relative",
+  },
+  backButton: {
+    position: "absolute",
+    left: 0,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: "#321904",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  mainHeaderTitle: { fontSize: 25, fontWeight: "bold", color: "#321904" },
+  section: { marginBottom: 20 },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#321904",
+    marginBottom: 10,
   },
 
   cardCalendario: {

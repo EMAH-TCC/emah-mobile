@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -13,6 +14,7 @@ import {
   View,
 } from "react-native";
 import { supabase } from "../../utils/supabase";
+import { Picker } from "@react-native-picker/picker";
 
 async function getUser() {
   const { data, error } = await supabase.auth.getUser();
@@ -23,13 +25,13 @@ async function getUser() {
   return data.user;
 }
 
-// 🔹 Inserir agendamento
 async function addAgendamento(
   id_paciente,
   nome_evento,
   descricao,
   data_evento,
-  horarios
+  horarios,
+  categoria
 ) {
   const { data, error } = await supabase
     .from("agendamento")
@@ -39,7 +41,8 @@ async function addAgendamento(
         nome_evento: nome_evento,
         descricao: descricao,
         data_evento: data_evento,
-        horarios: horarios, // campo JSONB no banco
+        horarios: horarios,
+        categoria: categoria,
       },
     ])
     .select();
@@ -64,6 +67,9 @@ export default function AdicionarAgendamento() {
   const [horarioInicio, setHorarioInicio] = useState("");
   const [horarioFim, setHorarioFim] = useState("");
 
+  const [tipoEvento, setTipoEvento] = useState("");
+  const [tipoCustom, setTipoCustom] = useState("");
+
   function isValidDateBR(dateStr) {
     const regex = /^\d{2}\/\d{2}\/\d{4}$/;
     if (!regex.test(dateStr)) return false;
@@ -78,7 +84,7 @@ export default function AdicionarAgendamento() {
 
   function parseDateBR(dateStr) {
     const [day, month, year] = dateStr.split("/");
-    return `${year}-${month}-${day}`; // formato ISO para o Supabase
+    return `${year}-${month}-${day}`;
   }
 
   function isValidTime(timeStr) {
@@ -126,12 +132,23 @@ export default function AdicionarAgendamento() {
 
     const dataISO = parseDateBR(dataEvento.trim());
 
+    let categoria = tipoEvento;
+
+    if (tipoEvento === "Outro") {
+      if (!tipoCustom.trim()) {
+        Alert.alert("Outro", "Por favor, digite a categoria do evento.");
+        return;
+      }
+      categoria = tipoCustom.trim();
+    }
+
     const novoEvento = await addAgendamento(
       idPaciente,
       nomeEvento.trim(),
       descricao.trim(),
       dataISO,
-      horarios
+      horarios,
+      categoria
     );
 
     if (novoEvento) {
@@ -147,6 +164,16 @@ export default function AdicionarAgendamento() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => router.back()}
+            >
+              <Ionicons name="arrow-back" size={20} color="#321904" />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Agenda</Text>
+          </View>
+
           <View style={styles.container}>
             <Text style={styles.label}>Nome do Evento</Text>
             <TextInput
@@ -154,6 +181,7 @@ export default function AdicionarAgendamento() {
               value={nomeEvento}
               onChangeText={setNomeEvento}
               placeholder="Ex: Consulta médica"
+              placeholderTextColor="#7a6c5d"
             />
 
             <Text style={styles.label}>Descrição</Text>
@@ -162,6 +190,7 @@ export default function AdicionarAgendamento() {
               value={descricao}
               onChangeText={setDescricao}
               placeholder="Ex: Avaliação de rotina"
+              placeholderTextColor="#7a6c5d"
             />
 
             <Text style={styles.label}>Data do Evento (DD/MM/AAAA)</Text>
@@ -170,6 +199,7 @@ export default function AdicionarAgendamento() {
               value={dataEvento}
               onChangeText={setDataEvento}
               placeholder="21/10/2025"
+              placeholderTextColor="#7a6c5d"
             />
 
             <Text style={styles.label}>Horário de Início</Text>
@@ -178,6 +208,7 @@ export default function AdicionarAgendamento() {
               value={horarioInicio}
               onChangeText={setHorarioInicio}
               placeholder="08:00"
+              placeholderTextColor="#7a6c5d"
             />
 
             <Text style={styles.label}>Horário de Término</Text>
@@ -186,7 +217,34 @@ export default function AdicionarAgendamento() {
               value={horarioFim}
               onChangeText={setHorarioFim}
               placeholder="09:00"
+              placeholderTextColor="#7a6c5d"
             />
+
+            <Text style={styles.label}>Categoria do Evento</Text>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={tipoEvento}
+                onValueChange={(value) => setTipoEvento(value)}
+                dropdownIconColor="#321904"
+                style={styles.label}
+              >
+                <Picker.Item label="Selecione uma categoria" value="" />
+                <Picker.Item label="Consulta médica" value="Consulta médica" />
+                <Picker.Item label="Exame" value="Exame" />
+                <Picker.Item label="Lembrete" value="Lembrete" />
+                <Picker.Item label="Outro" value="Outro" />
+              </Picker>
+            </View>
+
+            {tipoEvento === "Outro" && (
+              <TextInput
+                style={styles.input}
+                value={tipoCustom}
+                onChangeText={setTipoCustom}
+                placeholder="Digite sua categoria"
+                placeholderTextColor="#7a6c5d"
+              />
+            )}
 
             <TouchableOpacity
               style={styles.botaoSalvar}
@@ -209,6 +267,32 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 17,
   },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+    position: "relative",
+  },
+  backButton: {
+    position: "absolute",
+    left: 0,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: "#321904",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerTitle: { fontSize: 25, fontWeight: "bold", color: "#321904" },
+  section: { marginBottom: 20 },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#321904",
+    marginBottom: 10,
+  },
   container: {
     flex: 1,
     paddingHorizontal: 20,
@@ -229,6 +313,14 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     color: "#321904",
     fontSize: 20,
+    borderWidth: 1,
+    borderColor: "#ffff",
+  },
+  pickerContainer: {
+    backgroundColor: "#f7eee5ff",
+    borderRadius: 8,
+    marginTop: 6,
+    marginBottom: 12,
     borderWidth: 1,
     borderColor: "#ffff",
   },
