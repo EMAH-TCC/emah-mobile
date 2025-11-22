@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 20,
+        top: 10,
     },
     content: {
         alignItems: 'center',

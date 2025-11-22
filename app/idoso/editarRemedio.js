@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   header: {
     height: 60,
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: 25,
   },
   backButton: {
     position: 'absolute',
@@ -191,13 +191,15 @@ const styles = StyleSheet.create({
     borderColor: '#321904',
     justifyContent: 'center',
     alignItems: 'center',
+    top: 20,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 25,
     color: '#321904',
     fontWeight: 'bold',
     textAlign: 'center',
     alignSelf: 'center',
+    top: 20,
   },
   scrollContent: {
     paddingBottom: 20,

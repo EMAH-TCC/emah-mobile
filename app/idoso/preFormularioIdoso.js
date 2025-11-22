@@ -479,8 +479,9 @@ const styles = StyleSheet.create({
     borderColor: "#321904",
     justifyContent: "center",
     alignItems: "center",
+    top: 10,
   },
-  headerTitle: { fontSize: 25, fontWeight: "bold", color: "#321904" },
+  headerTitle: { fontSize: 25, fontWeight: "bold", color: "#321904", top: 10 },
   progressText: {
     textAlign: "center",
     fontSize: 18,

@@ -195,7 +195,6 @@ export default function Bpm() {
           </TouchableOpacity>
           <View style={{ flex: 1, alignItems: "center" }}>
             <Text style={styles.title}>Batimento Cardíaco</Text>
-            <Text style={styles.subtitle}>Sua última medição</Text>
           </View>
         </View>
 
@@ -272,12 +271,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingTop: 12,
+    paddingTop: 32,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: "#fff",
   },
-  backCircle: {
+  backButton: {
+    position: "absolute",
+    left: 15,
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -285,6 +286,7 @@ const styles = StyleSheet.create({
     borderColor: "#321904",
     justifyContent: "center",
     alignItems: "center",
+    top: 30,
   },
   title: {
     fontSize: 25,
@@ -292,11 +294,7 @@ const styles = StyleSheet.create({
     color: "#4f1a04ff",
     textAlign: "center",
   },
-  subtitle: {
-    fontSize: 20,
-    color: "#4f1a04ff",
-    textAlign: "center",
-  },
+ 
   card: {
     backgroundColor: "#f7eee5ff",
     borderRadius: 16,

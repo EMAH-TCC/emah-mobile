@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   menuButton: {
-    width: '47%',
+    width: '48%',
     aspectRatio: 1,
     backgroundColor: '#f7eee5ff',
     borderRadius: 12,
@@ -229,5 +229,5 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     marginBottom: 18,
   },
-  menuText: { marginTop: 8, fontSize: 20, color: '#321904', fontWeight: '500' },
+  menuText: { marginTop: 8, fontSize: 20, color: '#321904', fontWeight: '500', textAlign: 'center' },
 });

@@ -183,6 +183,7 @@ const styles = StyleSheet.create({
     borderColor: '#321904',
     justifyContent: 'center',
     alignItems: 'center',
+    top: 10,
   },
   headerTitle: {
     fontSize: 25,
@@ -190,6 +191,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     alignSelf: 'center',
+    top: 10,
   },
 
   listContent: { paddingBottom: 20 },

@@ -1,11 +1,15 @@
 import { decode } from 'base-64';
 import { useEffect, useState } from 'react';
-import { Button, PermissionsAndroid, Text, View } from 'react-native';
+import { PermissionsAndroid, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from "expo-router";
 
 const manager = new BleManager();
 
 export default function BLEHeartRate() {
+    const router = useRouter();
+
     const [device, setDevice] = useState(null);
     const [bpm, setBpm] = useState("");
 
@@ -105,8 +109,9 @@ export default function BLEHeartRate() {
                 if (bpm !== null) {
                     const bpmString = bpm.toString();
                     console.log("BPM extraído:", bpmString);
-                    // Define o estado na sua aplicação
+
                     setBpm(bpmString);
+
                 } else {
                     console.log("Falha ao decodificar o valor de BPM.");
                 }
@@ -116,9 +121,103 @@ export default function BLEHeartRate() {
     };
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ fontSize: 24, marginBottom: 20 }}>BPM: {bpm}</Text>
-            <Button title="Conectar ao ESP32" onPress={conectar} />
+        <View style={styles.safeArea}>
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+                    <View style={styles.backCircle}>
+                        <Ionicons name="arrow-back" size={24} color="#321904" />
+                    </View>
+                </TouchableOpacity>
+
+                <Text style={styles.headerTitle}>Monitor de Batimentos</Text>
+            </View>
+
+            <View style={styles.container}>
+
+                <View style={styles.bpmBox}>
+                    <Ionicons name="heart" size={40} color="#F28B0C" />
+                    <Text style={styles.bpmText}>{bpm || "--"} BPM</Text>
+                </View>
+
+                <TouchableOpacity style={styles.primaryButton} onPress={conectar}>
+                    <Text style={styles.buttonText}>Conectar ao ESP32</Text>
+                </TouchableOpacity>
+
+            </View>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: "#fff",
+    },
+    header: {
+        height: 70,
+        justifyContent: "center",
+        marginBottom: 15,
+    },
+    backButton: {
+        position: "absolute",
+        left: 20,
+        top: 20,
+    },
+    backCircle: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: "#321904",
+        justifyContent: "center",
+        alignItems: "center",
+        top: 20,
+    },
+    headerTitle: {
+        left: 15,
+        fontSize: 25,
+        color: "#321904",
+        fontWeight: "bold",
+        textAlign: "center",
+        marginTop: 10,
+        top: 20,
+    },
+    container: {
+        flex: 1,
+        paddingHorizontal: 20,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    bpmBox: {
+        backgroundColor: "#f7eee5ff",
+        width: "100%",
+        padding: 65,
+        borderRadius: 12,
+        alignItems: "center",
+        marginBottom: 380,
+        elevation: 3,
+        shadowColor: "#321904",
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+    },
+    bpmText: {
+        fontSize: 40,
+        fontWeight: "bold",
+        color: "#321904",
+        marginTop: 10,
+    },
+    primaryButton: {
+        backgroundColor: "#F28B0C",
+        paddingVertical: 16,
+        paddingHorizontal: 30,
+        borderRadius: 8,
+        width: "100%",
+        alignItems: "center",
+    },
+    buttonText: {
+        color: "#321904",
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+});

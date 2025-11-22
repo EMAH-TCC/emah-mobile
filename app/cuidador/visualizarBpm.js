@@ -1,7 +1,9 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { supabase } from '../../utils/supabase';
 
 async function selectUltimoBPM(paciente_id) {
@@ -14,6 +16,9 @@ async function selectUltimoBPM(paciente_id) {
     return data
 }
 export default function Bpm() {
+
+    const router = useRouter();
+
     const params = useLocalSearchParams();
 
     const idPaciente = params.id;
@@ -58,9 +63,17 @@ export default function Bpm() {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffffff' }}>
             <ScrollView contentContainerStyle={{ padding: 24, alignItems: 'center' }}>
-                {/* Header */}
-                <Text style={styles.title}>Batimento Cardíaco</Text>
-                <Text style={styles.subtitle}>Sua última medição</Text>
+                 {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color="#321904" />
+          </TouchableOpacity>
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <Text style={styles.title}>Batimento Cardíaco</Text>
+          </View>
+        </View>
 
                 {/* Heart Card */}
                 <View style={styles.card}>
@@ -92,8 +105,31 @@ export default function Bpm() {
 }
 
 const styles = StyleSheet.create({
-    title: { fontSize: 25, fontWeight: 'bold', color: '#4f1a04ff', marginTop: 20, textAlign: 'center' },
-    subtitle: { fontSize: 16, color: '#4f1a04ff', marginBottom: 20, textAlign: 'center' },
+
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 32,
+    borderBottomWidth: 1,
+    borderBottomColor: "#fff",
+  },
+  backButton: {
+    position: "absolute",
+    left: 0,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: "#321904",
+    justifyContent: "center",
+    alignItems: "center",
+    top: 5,
+  },
+  
+    title: { fontSize: 25, fontWeight: 'bold', color: '#4f1a04ff', marginTop: 0, textAlign: 'center' },
+    
     card: {
         backgroundColor: '#f7eee5ff',
         borderRadius: 16,

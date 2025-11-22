@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
+    marginBottom: 40,
     position: "relative",
   },
   backButton: {
@@ -261,8 +261,9 @@ const styles = StyleSheet.create({
     borderColor: "#321904",
     justifyContent: "center",
     alignItems: "center",
+    top: 10,
   },
-  mainHeaderTitle: { fontSize: 25, fontWeight: "bold", color: "#321904" },
+  mainHeaderTitle: { fontSize: 25, fontWeight: "bold", color: "#321904", top: 10 },
   section: { marginBottom: 20 },
   sectionTitle: {
     fontSize: 20,

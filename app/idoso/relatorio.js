@@ -260,16 +260,6 @@ export default function Relatorio() {
                     </View>
                 </ScrollView>
 
-                {/* Botão da tela inicial */}
-                <TouchableOpacity style={styles.homeButton} onPress={() => router.replace(
-                    {
-                        pathname: '/idoso/menuInicial',
-                        params: { id: params.id },
-                    }
-                )}>
-                    <Ionicons name="home-outline" size={28} color="#321904" />
-                </TouchableOpacity>
-
                 {/* menu suspenso */}
                 <Modal
                     transparent={true}
@@ -318,6 +308,7 @@ const styles = StyleSheet.create({
         borderColor: '#321904',
         justifyContent: 'center',
         alignItems: 'center',
+        top: 10,
     },
     headerTitle: {
         fontSize: 25,
@@ -325,6 +316,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         alignSelf: 'center',
+        top: 10,
     },
 
     listContent: { paddingBottom: 20 },
@@ -350,20 +342,6 @@ const styles = StyleSheet.create({
         marginBottom: 100,
     },
     addButtonText: { color: '#321904', fontWeight: 'bold', fontSize: 16 },
-
-    homeButton: {
-        position: 'absolute',
-        bottom: 20,
-        alignSelf: 'center',
-        backgroundColor: '#fff',
-        borderRadius: 30,
-        padding: 14,
-        elevation: 5,
-        shadowColor: '#321904',
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        shadowOffset: { width: 0, height: 2 },
-    },
 
     modalOverlay: { flex: 1, backgroundColor: 'transparent' },
     menuContainer: {
