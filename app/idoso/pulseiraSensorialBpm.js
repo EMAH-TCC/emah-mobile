@@ -1,17 +1,88 @@
-import { decode } from 'base-64';
-import { useEffect, useState } from 'react';
-import { PermissionsAndroid, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { BleManager } from 'react-native-ble-plx';
 import { Ionicons } from '@expo/vector-icons';
+import { decode } from 'base-64';
 import { useRouter } from "expo-router";
+import { useEffect, useState } from 'react';
+import { PermissionsAndroid, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BleManager } from 'react-native-ble-plx';
+import { supabase } from "../../utils/supabase";
 
 const manager = new BleManager();
+
+async function getUser() {
+    const { data, error } = await supabase.auth.getUser();
+
+    if (error) {
+        console.log("Erro: ", error);
+        return null;
+    }
+
+    return data.user;
+}
+
+async function getUserId(userId) {
+    const { data, error } = await supabase
+        .from("paciente")
+        .select("id")
+        .eq("id_user", userId)
+        .single();
+
+    if (error) {
+        console.log("Erro busca: ", error);
+        return null;
+    }
+
+    return data.id;
+}
+
+async function addBPM(pacienteId, bpm) {
+    const { data, error } = await supabase
+        .from("frequencia_cardiaca")
+        .insert([{ id_paciente: pacienteId, bpm: bpm }])
+        .select();
+
+    if (error) {
+        console.error("Erro ao inserir batimento cardíaco:", error);
+        return null;
+    }
+
+    return data;
+}
+
+async function salvarBatimentoNoBanco(pacienteId, bpm) {
+    console.log(pacienteId);
+    if (!pacienteId || !bpm) {
+        return;
+    }
+    try {
+        await addBPM(pacienteId, bpm);
+        console.log("Batimento adicionado:", bpm);
+    } catch (error) {
+        console.log("Erro ao salvar batimento:", error);
+    }
+}
 
 export default function BLEHeartRate() {
     const router = useRouter();
 
     const [device, setDevice] = useState(null);
     const [bpm, setBpm] = useState("");
+    const [pacienteId, setPacienteId] = useState(null);
+
+    useEffect(() => {
+        async function carregarUser() {
+            const user = await getUser();
+            if (!user) {
+                return;
+            }
+            const pacienteId = await getUserId(user.id);
+
+            setPacienteId(pacienteId);
+            if (!pacienteId) {
+                return;
+            }
+        }
+        carregarUser();
+    }, []);
 
     async function requestPermissions() {
         await PermissionsAndroid.requestMultiple([
@@ -110,7 +181,10 @@ export default function BLEHeartRate() {
                     const bpmString = bpm.toString();
                     console.log("BPM extraído:", bpmString);
 
+                    const bpmNumerico = parseInt(bpmString, 10);
+
                     setBpm(bpmString);
+                    salvarBatimentoNoBanco(pacienteId, bpmNumerico);
 
                 } else {
                     console.log("Falha ao decodificar o valor de BPM.");
@@ -140,7 +214,7 @@ export default function BLEHeartRate() {
                 </View>
 
                 <TouchableOpacity style={styles.primaryButton} onPress={conectar}>
-                    <Text style={styles.buttonText}>Conectar ao ESP32</Text>
+                    <Text style={styles.buttonText}>Conectar à pulseira sensorial</Text>
                 </TouchableOpacity>
 
             </View>
