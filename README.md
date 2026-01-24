@@ -42,18 +42,22 @@ A solução centraliza informações essenciais em um único ambiente digital, p
 
 ## Telas do aplicativo
 
-![telaInicial](https://github.com/user-attachments/assets/e7c0edf2-746a-49f0-ad46-bcfc80f22cd2)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e7c0edf2-746a-49f0-ad46-bcfc80f22cd2" width="220" alt="Tela inicial" />
+  <img src="https://github.com/user-attachments/assets/ba6e3099-4b1c-4c4d-a05a-82f67b3c40a0" width="220" alt="Menu inicial do idoso" />
+  <img src="https://github.com/user-attachments/assets/4e7c1c65-37b0-4295-acf0-80e30307d438" width="220" alt="Agenda de saúde" />
+  <img src="https://github.com/user-attachments/assets/626c42b5-72e9-4a4d-a549-c4cb1fd63cb7" width="220" alt="Monitoramento de BPM do cuidador" />
+</p>
 
-![menuInicialIdoso](https://github.com/user-attachments/assets/ba6e3099-4b1c-4c4d-a05a-82f67b3c40a0)
+---
 
-![agenda](https://github.com/user-attachments/assets/4e7c1c65-37b0-4295-acf0-80e30307d438)
-
-![bpmCuidador](https://github.com/user-attachments/assets/626c42b5-72e9-4a4d-a549-c4cb1fd63cb7)
-
-## ⌚ Pulseira sensorial
+## Pulseira sensorial
 
 A pulseira sensorial foi desenvolvida com componentes de baixo custo e é capaz de **captar e transmitir batimentos cardíacos** ao aplicativo EMAH, possibilitando o acompanhamento da saúde do usuário.
 
-<img width="1521" height="1600" alt="pulseiraSensorial" src="https://github.com/user-attachments/assets/428f6510-6626-4e0c-9510-10fbaf6e8d42" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/428f6510-6626-4e0c-9510-10fbaf6e8d42" width="350" alt="Pulseira sensorial desenvolvida no projeto" />
+</p>
 
-📌 Projeto em desenvolvimento como Trabalho de Conclusão de Curso (TCC) do curso Técnico em Informática.
+
+📌 Projeto em desenvolvimento como Trabalho de Conclusão de Curso (TCC) do curso Técnico em Informátic
