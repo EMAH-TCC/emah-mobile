@@ -2,7 +2,7 @@
 
 ## Sobre o projeto
 
-**EMAH** é uma plataforma digital integrada a uma pulseira sensorial de baixo custo, desenvolvida com o objetivo de **ampliar a autonomia de pessoas idosas** e **otimizar a rotina de cuidadores** por meio do acompanhamento da saúde.
+**EMAH** é uma plataforma digital integrada a uma pulseira sensorial de baixo custo, desenvolvida como Trabalho de Conclusão de Curso do curso Técnico em Informática no CEFET-MG com o objetivo de **ampliar a autonomia de pessoas idosas** e **otimizar a rotina de cuidadores** por meio do acompanhamento da saúde.
 
 O projeto surge a partir do crescimento da população idosa no Brasil, que atualmente corresponde a **15,8% da população**, e dos desafios associados ao controle do uso de medicações, ao registro diário de sintomas e sentimentos e à necessidade de monitoramento contínuo de sinais vitais.
 
@@ -58,6 +58,3 @@ A pulseira sensorial foi desenvolvida com componentes de baixo custo e é capaz 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/428f6510-6626-4e0c-9510-10fbaf6e8d42" width="350" alt="Pulseira sensorial desenvolvida no projeto" />
 </p>
-
-
-📌 Projeto em desenvolvimento como Trabalho de Conclusão de Curso (TCC) do curso Técnico em Informátic
