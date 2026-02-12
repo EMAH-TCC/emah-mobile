@@ -103,8 +103,7 @@ export default function BLEHeartRate() {
                 console.error(error);
                 return;
             }
-
-            if (device.name === 'EMAH') {
+            if (device.name === "EMAH") {
                 console.log('Encontramos:', device.name);
                 manager.stopDeviceScan();
 

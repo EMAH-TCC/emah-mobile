@@ -195,6 +195,7 @@ export default function Formulario() {
       const dataInsercao = new Date();
       const idQuestionario = await addQuestionario(
         idPaciente,
+        peso,
         temperatura,
         pressaoSistolica,
         pressaoDiastolica,
@@ -202,7 +203,6 @@ export default function Formulario() {
         notas,
         dataInsercao
       );
-
 
       for (const sintoma of Object.keys(sintomasSelecionados).filter(
         (key) => sintomasSelecionados[key]

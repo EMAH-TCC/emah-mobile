@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
+import { addPreFormulario, getUser } from "app\idoso\insercaoPreFormulario.js";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform,} from "react-native";
+import { useState } from "react";
+import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
 
 export default function PreFormularioIdoso() {
   const router = useRouter();
@@ -9,9 +10,9 @@ export default function PreFormularioIdoso() {
   const totalEtapas = 6;
 
   const [sexo, setSexo] = useState("");
-  const [moraSozinho, setMoraSozinho] = useState("");
+  const [moraSozinho, setMoraSozinho] = useState(null);
   const [sono, setSono] = useState("");
-  const [atividadeFisica, setAtividadeFisica] = useState("");
+  const [atividadeFisica, setAtividadeFisica] = useState(null);
   const [tipoAtividade, setTipoAtividade] = useState("");
   const [bebidas, setBebidas] = useState("");
   const [fumo, setFumo] = useState("");
@@ -21,30 +22,70 @@ export default function PreFormularioIdoso() {
   const [aparelhos, setAparelhos] = useState({});
   const [alergias, setAlergias] = useState("");
 
-  const [usoMedicamentos, setUsoMedicamentos] = useState("");
+  const [usoMedicamentos, setUsoMedicamentos] = useState(null);
   const [quaisMedicamentos, setQuaisMedicamentos] = useState("");
   const [esquecimento, setEsquecimento] = useState("");
 
   const [autonomia, setAutonomia] = useState({});
   const [emocional, setEmocional] = useState({});
-  const [cuidador, setCuidador] = useState("");
+  const [cuidador, setCuidador] = useState(null);
   const [nomeCuidador, setNomeCuidador] = useState("");
   const [telefoneCuidador, setTelefoneCuidador] = useState("");
-  const [postoSaude, setPostoSaude] = useState("");
 
   const toggleItem = (state, setState, item) => {
     setState({ ...state, [item]: !state[item] });
   };
 
   const avancar = () => {
-    if (etapa < totalEtapas) setEtapa(etapa + 1);
-    else router.push("/idoso/menuInicial");
+    if (etapa < totalEtapas) {
+      setEtapa(etapa + 1);
+    } else {
+      handleConcluir();
+    }
   };
+
 
   const voltar = () => {
     if (etapa > 1) setEtapa(etapa - 1);
     else router.back();
   };
+
+  const handleConcluir = async () => {
+    try {
+      const user = await getUser();
+      if (!user) return;
+
+      const dadosPreFormulario = {
+        sexo,
+        mora_sozinho: moraSozinho,
+        horas_de_sono: sono,
+        pratica_atividade_fisica: atividadeFisica,
+        tipo_atividade: tipoAtividade,
+        bebidas,
+        fumo,
+        doencas,
+        cirurgias,
+        aparelhos,
+        alergias,
+        usoMedicamentos,
+        medicamentos: quaisMedicamentos,
+        esquecimento,
+        autonomia,
+        emocional,
+      };
+
+      await addPreFormulario(user.id, dadosPreFormulario);
+
+      if (cuidador === true) {
+        await addCuidador(user.id, nomeCuidador, telefoneCuidador);
+      }
+
+      router.push("/idoso/menuInicial");
+    } catch (error) {
+      console.error("Erro ao concluir formulário:", error);
+    }
+  };
+
 
   const renderDivider = () => <View style={styles.divider} />;
 
@@ -171,11 +212,11 @@ export default function PreFormularioIdoso() {
 
             <Text style={styles.label}>Você possui alguma dessas condições?</Text>
             {[
-             "Hipertensão", "Diabetes", "Artrite", "Osteoporose",
-          "Doença cardíaca", "Problemas respiratórios",
-          "Doença de Alzheimer", "Depressão", "Ansiedade",
-          "Glaucoma", "Parkinson", "Incontinência urinária",
-          "Problemas de visão", "Problemas auditivos", "Outras",
+              "Hipertensão", "Diabetes", "Artrite", "Osteoporose",
+              "Doença cardíaca", "Problemas respiratórios",
+              "Doença de Alzheimer", "Depressão", "Ansiedade",
+              "Glaucoma", "Parkinson", "Incontinência urinária",
+              "Problemas de visão", "Problemas auditivos", "Outras",
             ].map((item) => (
               <TouchableOpacity
                 key={item}
@@ -410,16 +451,6 @@ export default function PreFormularioIdoso() {
             )}
             {renderDivider()}
 
-            <Text style={styles.label}>
-              Médico ou posto de saúde que costuma frequentar:
-            </Text>
-            <TextInput
-              style={styles.input}
-              value={postoSaude}
-              onChangeText={setPostoSaude}
-              placeholder="Exemplo: Posto Central de Contagem"
-              placeholderTextColor="#7a6c5d"
-            />
           </View>
         );
 
