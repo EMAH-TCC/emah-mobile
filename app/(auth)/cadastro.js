@@ -77,10 +77,11 @@ export default function Cadastro() {
       const { error: insertError2 } = await supabase.from("usuarios").insert([
         {
           id: usuarioInserido.id,
+          id_user: user.id,
           tipo_usuario: nomeTabela,
         },
       ]);
-
+      console.log("Inseriu em usuários.");
       if (insertError2) {
         console.log("Erro ao inserir na tabela de usuários:", insertError2);
         Alert.alert("Erro ao cadastrar usuário na tabela de usuários.");
@@ -171,7 +172,7 @@ export default function Cadastro() {
     return regex.test(email);
   }
 
-  function handleRegister() {
+  async function handleRegister() {
     const emptyFields = [];
     if (!name.trim()) emptyFields.push('name');
     if (!sobrenome.trim()) emptyFields.push('sobrenome');
@@ -209,14 +210,14 @@ export default function Cadastro() {
 
     setPasswordMismatch(false);
 
+    await signUpEmail();
+
     if (role === 'idoso') {
-      router.push('/idoso/preFormularioIdoso'); //nomes provisorios enquanto as telas não foram criadas
+      router.push('/idoso/preFormularioIdoso');
       console.log("Idoso!")
     } else {
       router.push('/cuidador/menuInicial');
     }
-
-    signUpEmail();
   }
 
   return (

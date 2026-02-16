@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { addPreFormulario, getUser } from "app\idoso\insercaoPreFormulario.js";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
+import { addCuidador, addPreFormulario, getPacienteId, getUser } from "./insercaoPreFormulario";
 
 export default function PreFormularioIdoso() {
   const router = useRouter();
@@ -32,17 +32,46 @@ export default function PreFormularioIdoso() {
   const [nomeCuidador, setNomeCuidador] = useState("");
   const [telefoneCuidador, setTelefoneCuidador] = useState("");
 
+  const RadioBoolean = ({ label, value, onChange }) => (
+    <>
+      <Text style={styles.label}>{label}</Text>
+      {[
+        { label: "Sim", value: true },
+        { label: "Não", value: false },
+      ].map((op) => (
+        <TouchableOpacity
+          key={op.label}
+          style={styles.radioOption}
+          onPress={() => onChange(op.value)}
+        >
+          <Ionicons
+            name={value === op.value ? "radio-button-on" : "radio-button-off"}
+            size={24}
+            color="#F28B0C"
+          />
+          <Text style={styles.optionText}>{op.label}</Text>
+        </TouchableOpacity>
+      ))}
+    </>
+  );
+
+
   const toggleItem = (state, setState, item) => {
     setState({ ...state, [item]: !state[item] });
   };
 
   const avancar = () => {
+    console.log("Botão pressionado. Etapa:", etapa);
+
     if (etapa < totalEtapas) {
       setEtapa(etapa + 1);
+      console.log("Avançar");
     } else {
+      console.log("Chamando handleConcluir");
       handleConcluir();
     }
   };
+
 
 
   const voltar = () => {
@@ -52,7 +81,9 @@ export default function PreFormularioIdoso() {
 
   const handleConcluir = async () => {
     try {
+      console.log("Oi");
       const user = await getUser();
+      console.log("User: ", user);
       if (!user) return;
 
       const dadosPreFormulario = {
@@ -72,20 +103,28 @@ export default function PreFormularioIdoso() {
         esquecimento,
         autonomia,
         emocional,
+        cuidador,
       };
 
-      await addPreFormulario(user.id, dadosPreFormulario);
-
-      if (cuidador === true) {
-        await addCuidador(user.id, nomeCuidador, telefoneCuidador);
+      const paciente_id = await getPacienteId(user.id)
+      if (!paciente_id) {
+        return
       }
 
+      const preFormularioId = await addPreFormulario(paciente_id, dadosPreFormulario);
+
+      if (!preFormularioId) return;
+
+      if (cuidador === true) {
+        await addCuidador(paciente_id, nomeCuidador, telefoneCuidador);
+      }
+
+      console.log("Enviou pré-formulário");
       router.push("/idoso/menuInicial");
     } catch (error) {
       console.error("Erro ao concluir formulário:", error);
     }
   };
-
 
   const renderDivider = () => <View style={styles.divider} />;
 
@@ -115,21 +154,11 @@ export default function PreFormularioIdoso() {
             ))}
             {renderDivider()}
 
-            <Text style={styles.label}>Você mora sozinho(a)?</Text>
-            {["Sim", "Não"].map((op) => (
-              <TouchableOpacity
-                key={op}
-                style={styles.radioOption}
-                onPress={() => setMoraSozinho(op)}
-              >
-                <Ionicons
-                  name={moraSozinho === op ? "radio-button-on" : "radio-button-off"}
-                  size={24}
-                  color="#F28B0C"
-                />
-                <Text style={styles.optionText}>{op}</Text>
-              </TouchableOpacity>
-            ))}
+            <RadioBoolean
+              label="Você mora sozinho(a)?"
+              value={moraSozinho}
+              onChange={setMoraSozinho}
+            />
             {renderDivider()}
 
             <Text style={styles.label}>Quantas horas costuma dormir por noite?</Text>
@@ -281,22 +310,13 @@ export default function PreFormularioIdoso() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Uso de medicações</Text>
 
-            <Text style={styles.label}>Você faz uso contínuo de algum medicamento?</Text>
-            {["Sim", "Não"].map((op) => (
-              <TouchableOpacity
-                key={op}
-                style={styles.radioOption}
-                onPress={() => setUsoMedicamentos(op)}
-              >
-                <Ionicons
-                  name={usoMedicamentos === op ? "radio-button-on" : "radio-button-off"}
-                  size={24}
-                  color="#F28B0C"
-                />
-                <Text style={styles.optionText}>{op}</Text>
-              </TouchableOpacity>
-            ))}
-            {usoMedicamentos === "Sim" && (
+            <RadioBoolean
+              label="Você faz uso contínuo de algum medicamento?"
+              value={usoMedicamentos}
+              onChange={setUsoMedicamentos}
+            />
+
+            {usoMedicamentos === true && (
               <TextInput
                 style={[styles.input, { height: 100 }]}
                 multiline
@@ -336,7 +356,6 @@ export default function PreFormularioIdoso() {
               "Consegue tomar banho sozinho(a)?",
               "Consegue preparar suas refeições?",
               "Consegue sair de casa sem ajuda?",
-              "Consegue administrar seu próprio dinheiro?",
             ].map((q) => (
               <View key={q}>
                 <Text style={styles.label}>{q}</Text>
@@ -409,26 +428,15 @@ export default function PreFormularioIdoso() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Contato e acompanhamento</Text>
 
-            <Text style={styles.label}>
-              Você possui um cuidador ou familiar responsável?
-            </Text>
-            {["Sim", "Não"].map((op) => (
-              <TouchableOpacity
-                key={op}
-                style={styles.radioOption}
-                onPress={() => setCuidador(op)}
-              >
-                <Ionicons
-                  name={cuidador === op ? "radio-button-on" : "radio-button-off"}
-                  size={24}
-                  color="#F28B0C"
-                />
-                <Text style={styles.optionText}>{op}</Text>
-              </TouchableOpacity>
-            ))}
+            <RadioBoolean
+              label="Você possui um cuidador ou familiar responsável?"
+              value={cuidador}
+              onChange={setCuidador}
+            />
+
             {renderDivider()}
 
-            {cuidador === "Sim" && (
+            {cuidador === true && (
               <>
                 <Text style={styles.label}>Nome do cuidador/familiar</Text>
                 <TextInput

@@ -2,13 +2,23 @@ import { supabase } from "../../utils/supabase";
 
 export async function getUser() {
     const { data, error } = await supabase.auth.getUser();
-
     if (error) {
         console.log("Erro: ", error);
         return null;
     }
 
     return data.user;
+}
+
+export async function getPacienteId(userId) {
+    const { data, error } = await supabase.from('paciente').select('id').eq('id_user', userId).single()
+
+    if (error) {
+        console.log("Erro busca: ", error);
+        return null;
+    }
+
+    return data.id
 }
 
 export async function addPreFormulario(pacienteId, dados) {
@@ -31,7 +41,7 @@ export async function addPreFormulario(pacienteId, dados) {
 }
 
 export async function addCuidador(pacienteId, nome, telefone) {
-    const { error } = await supabase.from("cuidador").insert([
+    const { error } = await supabase.from("cuidador_contato").insert([
         {
             id_paciente: pacienteId,
             nome_cuidador: nome,
