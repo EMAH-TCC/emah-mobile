@@ -1,8 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
-import { addCuidador, addPreFormulario, getPacienteId, getUser } from "./insercaoPreFormulario";
+import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View, } from "react-native";
+import RadioBoolean from "../../components/RadioBoolean";
+import { usePreFormulario } from "../../hooks/usePreFormulario";
+import { styles } from "../../styles/preFormularioStyles";
 
 export default function PreFormularioIdoso() {
   const router = useRouter();
@@ -32,29 +34,29 @@ export default function PreFormularioIdoso() {
   const [nomeCuidador, setNomeCuidador] = useState("");
   const [telefoneCuidador, setTelefoneCuidador] = useState("");
 
-  const RadioBoolean = ({ label, value, onChange }) => (
-    <>
-      <Text style={styles.label}>{label}</Text>
-      {[
-        { label: "Sim", value: true },
-        { label: "Não", value: false },
-      ].map((op) => (
-        <TouchableOpacity
-          key={op.label}
-          style={styles.radioOption}
-          onPress={() => onChange(op.value)}
-        >
-          <Ionicons
-            name={value === op.value ? "radio-button-on" : "radio-button-off"}
-            size={24}
-            color="#F28B0C"
-          />
-          <Text style={styles.optionText}>{op.label}</Text>
-        </TouchableOpacity>
-      ))}
-    </>
-  );
-
+  const { handleConcluir } = usePreFormulario(router, {
+    sexo,
+    mora_sozinho: moraSozinho,
+    horas_de_sono: sono,
+    pratica_atividade_fisica: atividadeFisica,
+    tipo_atividade: tipoAtividade,
+    bebidas,
+    fumo,
+    doencas,
+    cirurgias,
+    aparelhos,
+    alergias,
+    usoMedicamentos,
+    medicamentos: quaisMedicamentos,
+    esquecimento,
+    autonomia,
+    emocional,
+    cuidador
+  },
+    {
+      nomeCuidador,
+      telefoneCuidador
+    });
 
   const toggleItem = (state, setState, item) => {
     setState({ ...state, [item]: !state[item] });
@@ -72,59 +74,11 @@ export default function PreFormularioIdoso() {
     }
   };
 
-
-
   const voltar = () => {
     if (etapa > 1) setEtapa(etapa - 1);
     else router.back();
   };
 
-  const handleConcluir = async () => {
-    try {
-      console.log("Oi");
-      const user = await getUser();
-      console.log("User: ", user);
-      if (!user) return;
-
-      const dadosPreFormulario = {
-        sexo,
-        mora_sozinho: moraSozinho,
-        horas_de_sono: sono,
-        pratica_atividade_fisica: atividadeFisica,
-        tipo_atividade: tipoAtividade,
-        bebidas,
-        fumo,
-        doencas,
-        cirurgias,
-        aparelhos,
-        alergias,
-        usoMedicamentos,
-        medicamentos: quaisMedicamentos,
-        esquecimento,
-        autonomia,
-        emocional,
-        cuidador,
-      };
-
-      const paciente_id = await getPacienteId(user.id)
-      if (!paciente_id) {
-        return
-      }
-
-      const preFormularioId = await addPreFormulario(paciente_id, dadosPreFormulario);
-
-      if (!preFormularioId) return;
-
-      if (cuidador === true) {
-        await addCuidador(paciente_id, nomeCuidador, telefoneCuidador);
-      }
-
-      console.log("Enviou pré-formulário");
-      router.push("/idoso/menuInicial");
-    } catch (error) {
-      console.error("Erro ao concluir formulário:", error);
-    }
-  };
 
   const renderDivider = () => <View style={styles.divider} />;
 
@@ -497,62 +451,3 @@ export default function PreFormularioIdoso() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "#fff" },
-  scrollContent: { padding: 20, paddingBottom: 150 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-    marginBottom: 10,
-  },
-  backButton: {
-    position: "absolute",
-    left: 0,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "#321904",
-    justifyContent: "center",
-    alignItems: "center",
-    top: 10,
-  },
-  headerTitle: { fontSize: 25, fontWeight: "bold", color: "#321904", top: 10 },
-  progressText: {
-    textAlign: "center",
-    fontSize: 18,
-    color: "#7a6c5d",
-    marginBottom: 15,
-  },
-  section: { marginBottom: 25 },
-  sectionTitle: { fontSize: 20, fontWeight: "bold", color: "#321904", marginBottom: 12 },
-  label: { fontSize: 20, color: "#321904", marginBottom: 6, marginTop: 10 },
-  input: {
-    backgroundColor: "#f7eee5ff",
-    padding: 14,
-    borderRadius: 6,
-    marginBottom: 14,
-    fontSize: 20,
-    color: "#321904",
-    textAlignVertical: "top",
-  },
-  radioOption: { flexDirection: "row", alignItems: "center", marginBottom: 10 },
-  checkboxRow: { flexDirection: "row", alignItems: "center", marginBottom: 10 },
-  optionText: { marginLeft: 8, fontSize: 20, color: "#321904", flexShrink: 1 },
-  divider: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#d8c9b8",
-    marginVertical: 10,
-  },
-  saveButton: {
-    backgroundColor: "#F28B0C",
-    paddingVertical: 16,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 20,
-  },
-  saveButtonText: { color: "#fff", fontSize: 20, fontWeight: "bold" },
-});
