@@ -3,19 +3,8 @@ import * as Clipboard from 'expo-clipboard';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { supabase } from '../../utils/supabase';
+import { criarCodigo } from '../../features/idoso/conexaoComCuidadorService';
 import { getPacienteId, getUser } from "../../utils/userData";
-
-async function criarCodigo(pacienteId) {
-  const { data, error } = await supabase.rpc('criar_codigo_conexao', { codigo_paciente_id: pacienteId });
-
-  if (error) {
-    console.error('Erro ao gerar código:', error);
-    return null;
-  }
-  return data;
-}
-
 
 export default function CodigoDoIdoso() {
   const router = useRouter();

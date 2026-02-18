@@ -2,23 +2,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { updateRemedio } from '../../features/idoso/remedioService';
 import { styles } from '../../styles/acoesRemedios';
-import { supabase } from '../../utils/supabase';
 import { getUser, getUserId } from '../../utils/userData';
-
-async function updateRemedio(idRemedio, pacienteId, nome, frequencia, dose, horarios) {
-  const { data, error } = await supabase
-    .from('medicamento')
-    .update({ id_paciente: pacienteId, nome: nome, frequencia: frequencia, dose: dose, horarios: horarios })
-    .eq('id', idRemedio)
-
-  if (error) {
-    console.error("Erro ao atualizar:", error)
-    return null
-  }
-
-  return data
-}
 
 export default function EditarRemedio() {
   const router = useRouter();

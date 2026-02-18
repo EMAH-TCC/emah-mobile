@@ -2,34 +2,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { verificarCodigoConexao } from '../../features/cuidador/conexaoComIdosoService';
 import { styles } from '../../styles/codigo_e_confirmacao';
-import { supabase } from '../../utils/supabase';
 import { getUser, getUserId } from "../../utils/userData";
 
-async function verificarCodigoConexao(codigo) {
-  const { data, error } = await supabase.rpc('verificar_codigo_conexao', { codigo_inserido: codigo });
-  if (data) {
-    console.log("Tem dado: ", data);
-  }
-  if (error) {
-    console.error('Erro ao verificar código código:', error);
-    return null;
-  }
-  return data;
-}
-async function selectNomeCuidador(userId) {
-  const { data, error } = await supabase
-    .from('cuidador')
-    .select('nome')
-    .eq('id', userId)
-
-  if (error) {
-    console.error("Erro ao consultar:", error)
-    return null
-  }
-
-  return data
-}
 export default function InserirCodigoIdoso() {
   const router = useRouter();
   const [codigo, setCodigo] = useState('');

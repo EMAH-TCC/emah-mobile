@@ -2,76 +2,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { selectQuestionario, selectUltimoBPM } from '../../features/idoso/registroDiarioService';
 import { styles } from '../../styles/relatorioStyles';
-import { supabase } from '../../utils/supabase';
 import { getUser } from '../../utils/userData';
-
-async function selectQuestionario(pacienteId) {
-    const { data: questionarios, error } = await supabase
-        .from('questionario')
-        .select('id, temperatura, peso, pressao_sistolica, pressao_diastolica, remedios, notas, data')
-        .eq('id_paciente', pacienteId)
-        .order('data', { ascending: false });
-
-    if (error) {
-        console.error("Erro ao buscar questionários:", error);
-        return null;
-    }
-
-    if (!questionarios || questionarios.length === 0) return [];
-
-    // Buscar sintomas e humores de cada questionário
-    const questionariosComDetalhes = await Promise.all(
-        questionarios.map(async (q) => {
-            // Sintomas
-            const { data: sintomasData } = await supabase
-                .from("questionario_sintoma")
-                .select("sintoma(nome)")
-                .eq("id_questionario", q.id);
-
-            // Humores
-            const { data: humoresData } = await supabase
-                .from("questionario_sentimento")
-                .select("sentimento(nome)")
-                .eq("id_questionario", q.id);
-
-            return {
-                ...q,
-                sintomas: sintomasData?.map(s => s.sintoma.nome) || [],
-                humores: humoresData?.map(h => h.sentimento.nome) || [],
-            };
-        })
-    );
-
-    return questionariosComDetalhes;
-}
-
-async function selectUltimoBPM(paciente_id) {
-    const { data, error } = await supabase.rpc('selecionar_batimentos_do_paciente', { paciente_id: paciente_id });
-
-    if (error) {
-        console.error("Erro ao inserir consulta:", error)
-        return null
-    }
-    return data
-}
-
-async function recebeUltimoBpm() {
-    try {
-        if (!id_paciente) return;
-
-        const frequencia_cardiaca = await selectUltimoBPM(id_paciente);
-
-        if (frequencia_cardiaca) {
-            setBpm(frequencia_cardiaca[0].batimento);
-            setTime(frequencia_cardiaca[0].data_de_criacao);
-        }
-    } catch (error) {
-        console.log("Erro ao buscar último BPM:", error);
-    }
-}
-
-
 
 export default function Relatorio() {
     const router = useRouter();

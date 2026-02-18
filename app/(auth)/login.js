@@ -2,9 +2,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { AppState, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { signInWithEmail, validateLogin } from '../../features/signInWithEmail';
 import { styles } from '../../styles/loginStyles';
 import { supabase } from '../../utils/supabase';
-import { signInWithEmail, validateLogin } from './signInWithEmail';
 
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {

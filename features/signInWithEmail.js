@@ -1,4 +1,4 @@
-import { supabase } from '../../utils/supabase';
+import { supabase } from '../utils/supabase';
 
 export function validateLogin({ email, password }) {
     const errors = {

@@ -1,23 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { deleteRemedio } from '../../features/idoso/remedioService';
 import { styles } from '../../styles/acoesRemedios';
-import { supabase } from '../../utils/supabase';
 import { getUser } from '../../utils/userData';
-
-async function deleteRemedio(idRemedio) {
-    const { data, error } = await supabase
-        .from('medicamento')
-        .delete()
-        .eq('id', idRemedio)
-
-    if (error) {
-        console.error("Erro ao deletar:", error)
-        return null
-    }
-
-    return data
-}
 
 export default function RemoverRemedio() {
     const router = useRouter();

@@ -2,19 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { supabase } from '../../utils/supabase';
+import { selectCuidadores } from '../../features/idoso/conexaoComCuidadorService';
 import { getUser, getUserId } from "../../utils/userData";
-
-async function selectCuidadores(paciente_id) {
-    const { data, error } = await supabase.rpc('selecionar_cuidadores_do_paciente', { paciente_id: paciente_id });
-
-    if (error) {
-        console.error("Erro ao inserir consulta:", error)
-        return null
-    }
-
-    return data
-}
 
 export default function MenuInicial() {
     const router = useRouter();

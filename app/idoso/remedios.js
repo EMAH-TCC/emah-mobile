@@ -2,23 +2,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Modal, Platform, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { selectRemedios } from '../../features/idoso/remedioService';
 import { styles } from '../../styles/remedios';
-import { supabase } from '../../utils/supabase';
 import { getUser } from '../../utils/userData';
-
-async function selectRemedios(pacienteId) {
-  const { data, error } = await supabase
-    .from('medicamento')
-    .select('id, nome')
-    .eq('id_paciente', pacienteId);
-
-  if (error) {
-    console.error("Erro ao inserir consulta:", error)
-    return null
-  }
-
-  return data
-}
 
 export default function Remedios() {
   const router = useRouter();

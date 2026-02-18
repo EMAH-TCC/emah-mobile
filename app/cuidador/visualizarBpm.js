@@ -3,18 +3,9 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { selectUltimoBPM } from "../../features/cuidador/visualizarBpmService";
 import { styles } from '../../styles/bpmStyles';
-import { supabase } from '../../utils/supabase';
 
-async function selectUltimoBPM(paciente_id) {
-    const { data, error } = await supabase.rpc('selecionar_batimentos_do_paciente', { paciente_id: paciente_id });
-
-    if (error) {
-        console.error("Erro ao inserir consulta:", error)
-        return null
-    }
-    return data
-}
 export default function Bpm() {
 
     const router = useRouter();

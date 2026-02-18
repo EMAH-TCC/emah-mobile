@@ -11,43 +11,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { addQuestionario, defineSentimento, defineSintoma, vincularSentimento, vinculaSintoma } from "../../features/idoso/registroDiarioService";
 import { styles } from "../../styles/formularioStyles";
-import { supabase } from "../../utils/supabase";
 import { getUser } from "../../utils/userData";
-
-async function addQuestionario(
-  pacienteId,
-  temperatura,
-  peso,
-  pressaoSistolica,
-  pressaoDiastolica,
-  remedios,
-  notas,
-  dataInsercao
-) {
-  const { data, error } = await supabase
-    .from("questionario")
-    .insert([
-      {
-        id_paciente: pacienteId,
-        temperatura: Number(temperatura),
-        peso: Number(peso),
-        pressao_sistolica: Number(pressaoSistolica),
-        pressao_diastolica: Number(pressaoDiastolica),
-        remedios,
-        notas,
-        data: dataInsercao,
-      },
-    ])
-    .select();
-
-  if (error) {
-    console.error("Erro ao inserir consulta:", error);
-    return null;
-  }
-
-  return data[0].id;
-}
 
 export default function Formulario() {
   const router = useRouter();
@@ -104,76 +70,6 @@ export default function Formulario() {
     { nome: "Apático", icon: "ellipse-outline" },
     { nome: "Confuso", icon: "help-circle-outline" },
   ];
-
-  async function insereQuestionario(dadosQuestionario) {
-    const { data, error } = await supabase
-      .from("questionario")
-      .insert([dadosQuestionario])
-      .select("id");
-
-    if (error) throw error;
-    return data.id;
-  }
-
-  async function defineSintoma(nome) {
-    let { data, error } = await supabase
-      .from("sintoma")
-      .select("id")
-      .eq("nome", nome)
-      .limit(1)
-      .single();
-
-    if (error && error.code !== "PGRST116") throw error;
-
-    if (data) return data.id;
-
-    const { data: novoData, error: novoError } = await supabase
-      .from("sintoma")
-      .insert([{ nome }])
-      .select("id")
-      .single();
-
-    if (novoError) throw novoError;
-    return novoData.id;
-  }
-
-  async function vinculaSintoma(idQuestionario, idSintoma) {
-    const { error } = await supabase
-      .from("questionario_sintoma")
-      .insert([{ id_questionario: idQuestionario, id_sintoma: idSintoma }]);
-    if (error) throw error;
-  }
-
-  async function defineSentimento(nome) {
-    let { data, error } = await supabase
-      .from("sentimento")
-      .select("id")
-      .eq("nome", nome)
-      .limit(1)
-      .single();
-
-    if (error && error.code !== "PGRST116") throw error;
-
-    if (data) return data.id;
-
-    const { data: novoData, error: novoError } = await supabase
-      .from("sentimento")
-      .insert([{ nome }])
-      .select("id")
-      .single();
-
-    if (novoError) throw novoError;
-    return novoData.id;
-  }
-
-  async function vincularSentimento(idQuestionario, idSentimento) {
-    const { error } = await supabase
-      .from("questionario_sentimento")
-      .insert([
-        { id_questionario: idQuestionario, id_sentimento: idSentimento },
-      ]);
-    if (error) throw error;
-  }
 
   async function salvarQuestionarioNoBanco() {
     try {
