@@ -4,28 +4,7 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
-
-async function getUser() {
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error) {
-    console.log("Erro: ", error);
-    return null;
-  }
-
-  return data.user;
-}
-
-async function getUserId(userId) {
-  const { data, error } = await supabase.from('paciente').select('id').eq('id_user', userId).single()
-
-  if (error) {
-    console.log("Erro busca: ", error);
-    return null;
-  }
-
-  return data.id
-}
+import { getPacienteId, getUser } from "../../utils/userData";
 
 async function criarCodigo(pacienteId) {
   const { data, error } = await supabase.rpc('criar_codigo_conexao', { codigo_paciente_id: pacienteId });
@@ -48,7 +27,7 @@ export default function CodigoDoIdoso() {
       if (!user) {
         return
       }
-      const pacienteId = await getUserId(user.id)
+      const pacienteId = await getPacienteId(user.id)
       if (!pacienteId) {
         return
       }

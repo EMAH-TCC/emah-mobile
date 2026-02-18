@@ -3,28 +3,7 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
-
-async function getUser() {
-    const { data, error } = await supabase.auth.getUser();
-
-    if (error) {
-        console.log("Erro: ", error);
-        return null;
-    }
-
-    return data.user;
-}
-
-async function getUserId(userId) {
-    const { data, error } = await supabase.from('usuarios').select('id').eq('id_user', userId).single()
-
-    if (error) {
-        console.log("Erro busca: ", error);
-        return null;
-    }
-
-    return data.id
-}
+import { getUser, getUserId } from "../../utils/userData";
 
 async function selectCuidadores(paciente_id) {
     const { data, error } = await supabase.rpc('selecionar_cuidadores_do_paciente', { paciente_id: paciente_id });
@@ -91,35 +70,35 @@ export default function MenuInicial() {
             <View style={styles.container}>
                 {/* Cabeçalho */}
                 <View style={styles.header}>
-                             <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-                               <View style={styles.backCircle}>
-                                 <Ionicons name="arrow-back" size={24} color="#321904" />
-                               </View>
-                             </TouchableOpacity>
-                             <Text style={styles.headerTitle}>Cuidadores</Text>
-                           </View>
+                    <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+                        <View style={styles.backCircle}>
+                            <Ionicons name="arrow-back" size={24} color="#321904" />
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.headerTitle}>Cuidadores</Text>
+                </View>
+            </View>
+
+            {/* Parte inferior dos botões */}
+            <ScrollView contentContainerStyle={styles.bottomBox}>
+                <View style={styles.grid}>
+
+                    <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/idoso/adicionarCuidador')}>
+                        <Ionicons name="person" size={38} color="#321904" />
+                        <Text style={styles.menuText}>Adicionar Cuidadores</Text>
+                    </TouchableOpacity>
                 </View>
 
-                {/* Parte inferior dos botões */}
-                <ScrollView contentContainerStyle={styles.bottomBox}>
-                    <View style={styles.grid}>
+                <FlatList
+                    data={cuidadores}
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderCuidadores}
+                    ListEmptyComponent={<Text>Cuidadores não encontrados</Text>}
+                    contentContainerStyle={styles.listContent}
+                    scrollEnabled={false}
+                />
 
-                        <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/idoso/adicionarCuidador')}>
-                            <Ionicons name="person" size={38} color="#321904" />
-                            <Text style={styles.menuText}>Adicionar Cuidadores</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <FlatList
-                        data={cuidadores}
-                        keyExtractor={(item) => item.id}
-                        renderItem={renderCuidadores}
-                        ListEmptyComponent={<Text>Cuidadores não encontrados</Text>}
-                        contentContainerStyle={styles.listContent}
-                        scrollEnabled={false}
-                    />
-
-                    {/* menu suspenso
+                {/* menu suspenso
           <Modal
             transparent={true}
             visible={modalVisible}
@@ -134,7 +113,7 @@ export default function MenuInicial() {
               </View>
             </TouchableOpacity>
           </Modal>*/}
-                </ScrollView>
+            </ScrollView>
         </SafeAreaView>
     );
 }
@@ -144,32 +123,32 @@ const styles = StyleSheet.create({
     container: { flex: 1 },
 
     header: {
-    height: 90,
-    justifyContent: 'center',
-    marginBottom: 20,
-    position: 'relative',
-  },
-  backButton: {
-    position: 'absolute',
-    left: 13,
-    top: 30,
-  },
-  backCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#321904',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 25,
-    color: '#321904',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    alignSelf: 'center',
-  },
+        height: 90,
+        justifyContent: 'center',
+        marginBottom: 20,
+        position: 'relative',
+    },
+    backButton: {
+        position: 'absolute',
+        left: 13,
+        top: 30,
+    },
+    backCircle: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: '#321904',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    headerTitle: {
+        fontSize: 25,
+        color: '#321904',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        alignSelf: 'center',
+    },
 
     greetingText: { fontSize: 20, color: '#321904', fontWeight: 'bold' },
 

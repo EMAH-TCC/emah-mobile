@@ -1,8 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, AppState, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { AppState, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { styles } from '../../styles/loginStyles';
 import { supabase } from '../../utils/supabase';
+import { signInWithEmail, validateLogin } from './signInWithEmail';
 
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
@@ -23,46 +25,37 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [tipo_usuario, setTipoUsuario] = useState(null);
 
-  async function signInWithEmail() {
-    if (!validateLogin()) return;
-    //setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({
+  async function handleLogin() {
+    const validation = validateLogin({
       email: loginInput,
       password: password,
-    })
-    if (error) {
-      Alert.alert(error.message)
+    });
+    setErrors(validation.errors);
 
-    } else {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const { data, error } = await supabase.from("usuarios").select("tipo_usuario").eq("id_user", session.user.id).single();
-        if (data) {
-          setTipoUsuario(data.tipo_usuario);
-          if (data.tipo_usuario === "paciente") {
-            router.replace('../idoso/menuInicial');
-          } else if (data.tipo_usuario === "cuidador") {
-            router.replace('../cuidador/menuInicial');
-          }
-        }
-      }
+    if (!validation.valid) {
+      Alert.alert('Atenção', validation.message);
+      return;
     }
-  }
 
-  // funçao para validar os campos
-  function validateLogin() {
-    const newErrors = {
-      login: !loginInput.trim(),
-      password: !password.trim(),
-    };
-    setErrors(newErrors);
+    setLoading(true);
 
-    if (newErrors.login || newErrors.password) {
-      Alert.alert('Atenção', 'Preencha todos os campos.');
-      return false;
+    const result = await signInWithEmail({
+      email: loginInput,
+      password: password,
+    });
+
+    setLoading(false);
+
+    if (!result.success) {
+      Alert.alert(result.message);
+      return;
     }
-    return true;
 
+    if (result.tipo_usuario === "paciente") {
+      router.replace('/idoso/menuInicial');
+    } else if (result.tipo_usuario === "cuidador") {
+      router.replace('/cuidador/menuInicial');
+    }
   }
 
   return (
@@ -110,7 +103,7 @@ export default function Login() {
 
         {/* Botão Entrar */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={[styles.button, styles.primaryButton]} onPress={signInWithEmail}>
+          <TouchableOpacity style={[styles.button, styles.primaryButton]} onPress={handleLogin}>
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
         </View>
@@ -119,81 +112,3 @@ export default function Login() {
     </SafeAreaView>
   );
 }
-
-// Estilos
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#321904',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  inputContainer: {
-    marginBottom: 40,
-    width: '100%',
-    maxWidth: 300,
-    alignSelf: 'center',
-  },
-  input: {
-    backgroundColor: '#f7eee5ff',
-    borderRadius: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 16,
-    fontSize: 20,
-    color: '#321904',
-    marginBottom: 20,
-    width: '100%',
-  },
-  passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f7eee5ff',
-    borderRadius: 6,
-    paddingRight: 8,
-    width: '100%',
-  },
-  eyeIcon: {
-    paddingHorizontal: 5,
-  },
-  forgotPasswordText: {
-    color: '#321904',
-    fontSize: 20,
-    marginTop: 8,
-    textAlign: 'right',
-    textDecorationLine: 'underline',
-  },
-  buttonContainer: {
-    width: '100%',
-    maxWidth: 300,
-    alignSelf: 'center',
-    marginTop: 'auto',
-  },
-  button: {
-    paddingVertical: 14,
-    borderRadius: 6,
-    alignItems: 'center',
-    marginBottom: 36,
-    width: '100%',
-  },
-  primaryButton: {
-    backgroundColor: '#F28B0C',
-  },
-  buttonText: {
-    color: '#321904',
-    fontWeight: 'bold',
-    fontSize: 20,
-  },
-});

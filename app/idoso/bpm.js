@@ -7,10 +7,9 @@ import {
   Platform,
   SafeAreaView,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import {
   getGrantedPermissions,
@@ -21,7 +20,9 @@ import {
   SdkAvailabilityStatus,
 } from "react-native-health-connect";
 
+import { styles } from "../../styles/bpmStyles";
 import { supabase } from "../../utils/supabase";
+import { getUser, getUserId } from "../../utils/userData";
 
 const checkAvailability = async () => {
   const status = await getSdkStatus();
@@ -62,32 +63,6 @@ async function leBPMemSegundoPlano() {
     },
   });
   return records;
-}
-
-async function getUser() {
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error) {
-    console.log("Erro: ", error);
-    return null;
-  }
-
-  return data.user;
-}
-
-async function getUserId(userId) {
-  const { data, error } = await supabase
-    .from("paciente")
-    .select("id")
-    .eq("id_user", userId)
-    .single();
-
-  if (error) {
-    console.log("Erro busca: ", error);
-    return null;
-  }
-
-  return data.id;
 }
 
 async function addBPM(pacienteId, bpm) {
@@ -265,96 +240,3 @@ export default function Bpm() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 32,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#fff",
-  },
-  backButton: {
-    position: "absolute",
-    left: 15,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "#321904",
-    justifyContent: "center",
-    alignItems: "center",
-    top: 30,
-  },
-  title: {
-    fontSize: 25,
-    fontWeight: "bold",
-    color: "#4f1a04ff",
-    textAlign: "center",
-  },
- 
-  card: {
-    backgroundColor: "#f7eee5ff",
-    borderRadius: 16,
-    padding: 24,
-    alignItems: "center",
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    width: "100%",
-  },
-  heartContainer: {
-    position: "relative",
-    marginBottom: 16,
-  },
-  ping: {
-    position: "absolute",
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "rgba(220,38,38,0.2)",
-    top: 0,
-    left: 0,
-    zIndex: -1,
-  },
-  bpm: { fontSize: 64, fontWeight: "bold", color: "#C2410C" },
-  bpmLabel: { fontSize: 20, color: "#EA580C", marginBottom: 12 },
-  infoCard: {
-    backgroundColor: "rgba(249, 245, 239, 0.6)",
-    borderRadius: 12,
-    padding: 16,
-    width: "100%",
-    marginBottom: 20,
-  },
-  infoTitle: {
-    color: "#C2410C",
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 12,
-    textAlign: "center",
-  },
-  infoRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-  infoLabel: { color: "#EA580C", fontSize: 20 },
-  infoValue: { color: "#C2410C", fontSize: 20, fontWeight: "bold" },
-  button: {
-    backgroundColor: "#F97316",
-    paddingVertical: 12,
-    paddingHorizontal: 36,
-    borderRadius: 24,
-  },
-  buttonText: { color: "#fff", fontSize: 20, fontWeight: "bold" },
-  buttonPermissoes: {
-    backgroundColor: "#ee8439ff",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 24,
-    alignItems: "center",
-  },
-});

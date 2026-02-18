@@ -1,0 +1,75 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: "#fff",
+    },
+    header: {
+        height: 70,
+        justifyContent: "center",
+        marginBottom: 15,
+    },
+    backButton: {
+        position: "absolute",
+        left: 20,
+        top: 20,
+    },
+    backCircle: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: "#321904",
+        justifyContent: "center",
+        alignItems: "center",
+        top: 20,
+    },
+    headerTitle: {
+        left: 15,
+        fontSize: 25,
+        color: "#321904",
+        fontWeight: "bold",
+        textAlign: "center",
+        marginTop: 10,
+        top: 20,
+    },
+    container: {
+        flex: 1,
+        paddingHorizontal: 20,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    bpmBox: {
+        backgroundColor: "#f7eee5ff",
+        width: "100%",
+        padding: 65,
+        borderRadius: 12,
+        alignItems: "center",
+        marginBottom: 380,
+        elevation: 3,
+        shadowColor: "#321904",
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+    },
+    bpmText: {
+        fontSize: 40,
+        fontWeight: "bold",
+        color: "#321904",
+        marginTop: 10,
+    },
+    primaryButton: {
+        backgroundColor: "#F28B0C",
+        paddingVertical: 16,
+        paddingHorizontal: 30,
+        borderRadius: 8,
+        width: "100%",
+        alignItems: "center",
+    },
+    buttonText: {
+        color: "#321904",
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+});

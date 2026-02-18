@@ -3,28 +3,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, } from 'react-native';
 import { supabase } from '../../utils/supabase';
-
-async function getUser() {
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error) {
-    console.log("Erro: ", error);
-    return null;
-  }
-
-  return data.user;
-}
-
-async function getUserId(userId) {
-  const { data, error } = await supabase.from('usuarios').select('id').eq('id_user', userId).single()
-
-  if (error) {
-    console.log("Erro busca: ", error);
-    return null;
-  }
-
-  return data.id
-}
+import { getUser, getUserId } from "../../utils/userData";
 
 async function verificarCodigoConexao(codigo) {
   const { data, error } = await supabase.rpc('verificar_codigo_conexao', { codigo_inserido: codigo });

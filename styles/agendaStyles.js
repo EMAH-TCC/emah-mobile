@@ -1,0 +1,176 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+    safeArea: { flex: 1, backgroundColor: "#fff" },
+    scroll: { padding: 20, paddingBottom: 60 },
+    header: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+        marginBottom: 20,
+    },
+    headerTitle: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#321904",
+    },
+
+    mainHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 40,
+        position: "relative",
+    },
+    backButton: {
+        position: "absolute",
+        left: 0,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: "#321904",
+        justifyContent: "center",
+        alignItems: "center",
+        top: 10,
+    },
+    mainHeaderTitle: { fontSize: 25, fontWeight: "bold", color: "#321904", top: 10 },
+    section: { marginBottom: 20 },
+    sectionTitle: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#321904",
+        marginBottom: 10,
+    },
+
+    cardCalendario: {
+        borderWidth: 1,
+        borderColor: "#FFD9B3",
+        borderRadius: 14,
+        padding: 16,
+        marginBottom: 20,
+        backgroundColor: "#fff",
+    },
+    dataSelecionadaTitulo: {
+        fontSize: 20,
+        color: "#321904",
+        marginBottom: 4,
+        fontWeight: "500",
+    },
+    dataSelecionadaTexto: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#321904",
+        marginBottom: 12,
+        textTransform: "capitalize",
+    },
+
+    buttonRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 20,
+    },
+    botaoPrincipal: {
+        flex: 1,
+        flexDirection: "row",
+        backgroundColor: "#FF8C42",
+        paddingVertical: 10,
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 6,
+        marginRight: 10,
+    },
+    textoBotaoPrincipal: {
+        color: "#fff",
+        fontWeight: "bold",
+    },
+    botaoSecundario: {
+        flex: 1,
+        flexDirection: "row",
+        borderColor: "#FF8C42",
+        borderWidth: 1,
+        paddingVertical: 10,
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 6,
+    },
+    textoBotaoSecundario: {
+        color: "#FF8C42",
+        fontWeight: "bold",
+    },
+
+    agendaDiaHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+        marginBottom: 10,
+    },
+    agendaDiaTitulo: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#321904",
+    },
+
+    listaEventos: {
+        marginBottom: 20,
+    },
+    eventoCard: {
+        borderWidth: 1,
+        borderColor: "#FFD9B3",
+        backgroundColor: "#fff",
+        borderRadius: 12,
+        padding: 14,
+        marginBottom: 10,
+        elevation: 3,
+        shadowColor: "#000",
+        shadowOpacity: 0.05,
+        shadowOffset: { width: 0, height: 2 },
+    },
+    eventoCabecalho: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: 8,
+    },
+    horarioTexto: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#321904",
+    },
+    tagMedicamento: {
+        backgroundColor: "#FFF0E0",
+        borderRadius: 8,
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+    },
+    tagTexto: {
+        color: "#FF8C42",
+        fontWeight: "600",
+        fontSize: 20,
+    },
+    eventoTitulo: {
+        fontSize: 20,
+        color: "#321904",
+    },
+    semEventos: {
+        textAlign: "center",
+        color: "#999",
+        fontStyle: "italic",
+        marginTop: 15,
+    },
+
+    botaoAdicionar: {
+        alignSelf: "center",
+        backgroundColor: "#FF8C42",
+        borderRadius: 30,
+        padding: 14,
+        marginTop: 10,
+        elevation: 5,
+        shadowColor: "#321904",
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 2 },
+    },
+});

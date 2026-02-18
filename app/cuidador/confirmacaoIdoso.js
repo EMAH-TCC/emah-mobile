@@ -3,28 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../../utils/supabase';
-
-async function getUser() {
-    const { data, error } = await supabase.auth.getUser();
-
-    if (error) {
-        console.log("Erro: ", error);
-        return null;
-    }
-
-    return data.user;
-}
-
-async function getUserId(userId) {
-    const { data, error } = await supabase.from('usuarios').select('id').eq('id_user', userId).single()
-
-    if (error) {
-        console.log("Erro busca: ", error);
-        return null;
-    }
-
-    return data.id
-}
+import { getUser, getUserId } from "../../utils/userData";
 
 async function conectarPacienteECuidador(id_paciente, id_cuidador) {
     const { data, error } = await supabase.rpc('conectar_paciente_cuidador', { codigo_paciente_id: id_paciente, codigo_cuidador_id: id_cuidador });

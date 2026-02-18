@@ -2,37 +2,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { decode } from 'base-64';
 import { useRouter } from "expo-router";
 import { useEffect, useState } from 'react';
-import { PermissionsAndroid, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { PermissionsAndroid, Text, TouchableOpacity, View } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
+import { styles } from '../../styles/pulseiraSensorialStyles';
 import { supabase } from "../../utils/supabase";
+import { getPacienteId, getUser } from "../../utils/userData";
 
 const manager = new BleManager();
-
-async function getUser() {
-    const { data, error } = await supabase.auth.getUser();
-
-    if (error) {
-        console.log("Erro: ", error);
-        return null;
-    }
-
-    return data.user;
-}
-
-async function getUserId(userId) {
-    const { data, error } = await supabase
-        .from("paciente")
-        .select("id")
-        .eq("id_user", userId)
-        .single();
-
-    if (error) {
-        console.log("Erro busca: ", error);
-        return null;
-    }
-
-    return data.id;
-}
 
 async function addBPM(pacienteId, bpm) {
     const { data, error } = await supabase
@@ -74,7 +50,7 @@ export default function BLEHeartRate() {
             if (!user) {
                 return;
             }
-            const pacienteId = await getUserId(user.id);
+            const pacienteId = await getPacienteId(user.id);
 
             setPacienteId(pacienteId);
             if (!pacienteId) {
@@ -220,77 +196,3 @@ export default function BLEHeartRate() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: "#fff",
-    },
-    header: {
-        height: 70,
-        justifyContent: "center",
-        marginBottom: 15,
-    },
-    backButton: {
-        position: "absolute",
-        left: 20,
-        top: 20,
-    },
-    backCircle: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        borderWidth: 2,
-        borderColor: "#321904",
-        justifyContent: "center",
-        alignItems: "center",
-        top: 20,
-    },
-    headerTitle: {
-        left: 15,
-        fontSize: 25,
-        color: "#321904",
-        fontWeight: "bold",
-        textAlign: "center",
-        marginTop: 10,
-        top: 20,
-    },
-    container: {
-        flex: 1,
-        paddingHorizontal: 20,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    bpmBox: {
-        backgroundColor: "#f7eee5ff",
-        width: "100%",
-        padding: 65,
-        borderRadius: 12,
-        alignItems: "center",
-        marginBottom: 380,
-        elevation: 3,
-        shadowColor: "#321904",
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 4,
-    },
-    bpmText: {
-        fontSize: 40,
-        fontWeight: "bold",
-        color: "#321904",
-        marginTop: 10,
-    },
-    primaryButton: {
-        backgroundColor: "#F28B0C",
-        paddingVertical: 16,
-        paddingHorizontal: 30,
-        borderRadius: 8,
-        width: "100%",
-        alignItems: "center",
-    },
-    buttonText: {
-        color: "#321904",
-        fontSize: 20,
-        fontWeight: "bold",
-    },
-});

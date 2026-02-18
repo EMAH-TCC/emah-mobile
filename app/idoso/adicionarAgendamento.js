@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -7,14 +8,13 @@ import {
   Platform,
   SafeAreaView,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { styles } from "../../styles/adicionarAgendamento";
 import { supabase } from "../../utils/supabase";
-import { Picker } from "@react-native-picker/picker";
 
 async function getUser() {
   const { data, error } = await supabase.auth.getUser();
@@ -259,86 +259,3 @@ export default function AdicionarAgendamento() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  scrollContent: {
-    padding: 17,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20,
-    position: "relative",
-  },
-  backButton: {
-    position: "absolute",
-    left: 0,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "#321904",
-    justifyContent: "center",
-    alignItems: "center",
-    top: 10,
-  },
-  headerTitle: { fontSize: 25, fontWeight: "bold", color: "#321904", top: 10  },
-  section: { marginBottom: 20 },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#321904",
-    marginBottom: 10,
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    justifyContent: "flex-start",
-  },
-  label: {
-    marginTop: 12,
-    fontWeight: "bold",
-    color: "#321904",
-    fontSize: 20,
-  },
-  input: {
-    backgroundColor: "#f7eee5ff",
-    padding: 14,
-    borderRadius: 8,
-    marginTop: 6,
-    marginBottom: 12,
-    color: "#321904",
-    fontSize: 20,
-    borderWidth: 1,
-    borderColor: "#ffff",
-  },
-  pickerContainer: {
-    backgroundColor: "#f7eee5ff",
-    borderRadius: 8,
-    marginTop: 6,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: "#ffff",
-  },
-  botaoSalvar: {
-    backgroundColor: "#F28B0C",
-    padding: 14,
-    borderRadius: 10,
-    marginTop: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  textoBotao: {
-    color: "#321904",
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-});
