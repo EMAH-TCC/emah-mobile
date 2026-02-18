@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { styles } from '../../styles/menuInicialidosoStyles';
 import { supabase } from '../../utils/supabase';
 import { getUser, getUserId, selectNomeUser } from "../../utils/userData";
 
@@ -156,119 +157,3 @@ export default function MenuInicial() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#fff' },
-  container: { flex: 1 },
-
-  header: {
-    paddingTop: 20,
-    position: 'absolute',
-    top: 10,
-    left: 20,
-    right: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    zIndex: 10,
-  },
-  greetingText: { fontSize: 25, color: '#321904', fontWeight: 'bold' },
-
-  topBox: {
-    height: '43%',
-    backgroundColor: '#F28B0C',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  topImage: {
-    width: '70%',
-    height: '90%',
-    marginTop: 40,
-  },
-
-
-  bottomBox: {
-    paddingHorizontal: 15,
-    paddingTop: 20,
-    paddingBottom: 40,
-  },
-
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  menuButton: {
-    width: '100%',
-    height: 100,
-    backgroundColor: '#f6ab50ff',
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 3,
-    shadowColor: '#321904',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    marginBottom: 18,
-  },
-  menuText: { marginTop: 8, fontSize: 20, color: '#321904', fontWeight: '500' },
-  listContent: { paddingBottom: 20 },
-  card: {
-    backgroundColor: '#f5ece0ff',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    position: 'relative',
-  },
-  cardText: { color: '#321904', fontSize: 20, marginBottom: 4 },
-  cardTextPressao: { color: '#321904', fontSize: 20, marginBottom: 4, marginLeft: 90 },
-  optionsButton: { position: 'absolute', top: 10, right: 10 },
-
-  addButton: {
-    backgroundColor: '#F28B0C',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 14,
-    borderRadius: 6,
-    marginTop: 20,
-    marginBottom: 100,
-  },
-  addButtonText: { color: '#321904', fontWeight: 'bold', fontSize: 20 },
-
-  homeButton: {
-    position: 'absolute',
-    bottom: 20,
-    alignSelf: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 30,
-    padding: 14,
-    elevation: 5,
-    shadowColor: '#321904',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-  },
-
-  modalOverlay: { flex: 1, backgroundColor: 'transparent' },
-  menuContainer: {
-    position: 'absolute',
-    backgroundColor: '#F7F2FA',
-    borderRadius: 8,
-    paddingVertical: 10,
-    width: 180,
-    elevation: 5,
-  },
-  menuItem: { paddingVertical: 12, paddingHorizontal: 16 },
-  menuText: { fontSize: 20, color: '#321904' },
-  barraHorizontal: {
-    height: 1,
-    backgroundColor: 'grey',
-    width: 30,
-    marginLeft: 80,
-    paddingInline: 17,
-  }
-});

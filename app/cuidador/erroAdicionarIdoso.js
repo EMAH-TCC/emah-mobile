@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { styles } from '../../styles/retornoIdosoStyles';
 
 export default function ErroAdicionarIdoso({ route }) {
   const router = useRouter();
@@ -45,57 +46,3 @@ export default function ErroAdicionarIdoso({ route }) {
     </SafeAreaView>
   );
 }
-
-// Estilos
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-  },
-  header: {
-    alignItems: 'center',
-    marginTop: 80,
-    marginBottom: 20,
-  },
-  content: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  infoText: {
-    color: '#321904',
-    fontSize: 20,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    maxWidth: 320,
-  },
-  footer: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  button: {
-    paddingVertical: 14,
-    borderRadius: 6,
-    alignItems: 'center',
-    marginBottom: 12,
-    width: '100%',
-    maxWidth: 300,
-  },
-  primaryButton: {
-    backgroundColor: '#F28B0C',
-  },
-  secondaryButton: {
-    backgroundColor: '#FBB65A',
-  },
-  buttonText: {
-    color: '#321904',
-    fontWeight: 'bold',
-    fontSize: 20,
-  },
-});
